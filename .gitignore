@@ -1,0 +1,7 @@
+.idea/
+*.log
+*.tmp
+
+build/
+out/
+

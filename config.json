@@ -1,0 +1,7 @@
+{
+  "secret": "secret",
+  "db_name": "soundp",
+  "db_user": "timickb",
+  "db_password": "",
+  "db_ssl_mode": "disable"
+}
