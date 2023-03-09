@@ -1,9 +1,7 @@
 package controller
 
-import "github.com/timickb/transport-sound/internal/domain"
-
 type UserUseCase interface {
-	CreateUser(login, email, password string) (*domain.User, error)
+	CreateUser(login, email, password string) (string, error)
 	ChangePassword(id, oPwd, nPwd string) error
 	ChangeLogin(id, nLogin string) error
 	ChangeEmail(id, nEmail string) error
@@ -19,12 +17,12 @@ func NewUserController(u UserUseCase) *UserController {
 }
 
 func (c *UserController) Register(req *RegisterRequest) (*RegisterResponse, error) {
-	user, err := c.u.CreateUser(req.Login, req.Email, req.Password)
+	userId, err := c.u.CreateUser(req.Login, req.Email, req.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	return &RegisterResponse{UserId: user.Id}, nil
+	return &RegisterResponse{UserId: userId}, nil
 }
 
 func (c *UserController) ChangeLogin(req *ChangeLoginRequest) error {

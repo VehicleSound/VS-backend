@@ -6,7 +6,7 @@ import (
 )
 
 type Repository interface {
-	CreateUser(login, email, pwdHash string) (*domain.User, error)
+	CreateUser(login, email, pwdHash string) (string, error)
 	GetUserByLogin(login string) (*domain.User, error)
 	GetUserByEmail(email string) (*domain.User, error)
 	GetUserById(id string) (*domain.User, error)

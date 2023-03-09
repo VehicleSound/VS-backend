@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
-	"github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/repository"
 )
 
@@ -16,15 +15,25 @@ func NewUserUseCase(r Repository) *UserUseCase {
 	return &UserUseCase{r: r}
 }
 
-func (u *UserUseCase) CreateUser(login, email, password string) (*domain.User, error) {
+func (u *UserUseCase) CreateUser(login, email, password string) (string, error) {
 	if !validateLogin(login) {
-		return nil, errors.New("err create user: invalid login")
+		return "", errors.New("err create user: invalid login")
 	}
 	if !validatePassword(password) {
-		return nil, errors.New("err create user: invalid password")
+		return "", errors.New("err create user: invalid password")
 	}
 	if !validateEmail(email) {
-		return nil, errors.New("err create user: invalid email")
+		return "", errors.New("err create user: invalid email")
+	}
+
+	exLogin, errLogin := u.r.GetUserByLogin(login)
+	if errLogin == nil && exLogin.Login == login {
+		return "", errors.New("err create user: login already exists")
+	}
+
+	exEmail, errEmail := u.r.GetUserByEmail(email)
+	if errEmail == nil && exEmail.Email == email {
+		return "", errors.New("err create user: email already exists")
 	}
 
 	pwdHash := sha256.Sum256([]byte(password))
@@ -32,7 +41,7 @@ func (u *UserUseCase) CreateUser(login, email, password string) (*domain.User, e
 
 	user, err := u.r.CreateUser(login, email, pwdHashStr)
 	if err != nil {
-		return nil, fmt.Errorf("err create user: %w", err)
+		return "", fmt.Errorf("err create user: %w", err)
 	}
 
 	return user, nil

@@ -3,11 +3,12 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/controller"
 	"github.com/timickb/transport-sound/internal/delivery"
-	"github.com/timickb/transport-sound/internal/repository"
+	"github.com/timickb/transport-sound/internal/repository/postgres"
 	"github.com/timickb/transport-sound/internal/usecase"
 	"io/ioutil"
 	"log"
@@ -19,13 +20,19 @@ func main() {
 		log.Fatal(err)
 	}
 
-	connStr := "user=timickb dbname=soundp sslmode=disable"
+	connStr := fmt.Sprintf(
+		"user=%s dbname=%s sslmode=%s password=%s",
+		cfg.DbUser,
+		cfg.DbName,
+		cfg.DbSslMode,
+		cfg.DbPassword)
+
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	repo := repository.NewPqRepository(db)
+	repo := postgres.NewPqRepository(db)
 
 	userS := usecase.NewUserUseCase(repo)
 	authS := usecase.NewAuthUseCase(repo)
