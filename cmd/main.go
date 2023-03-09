@@ -37,11 +37,14 @@ func main() {
 	userS := usecase.NewUserUseCase(repo)
 	authS := usecase.NewAuthUseCase(repo)
 	tagS := usecase.NewTagUseCase(repo)
+	soundS := usecase.NewSoundUseCase(repo)
 
 	authC := controller.NewAuthController(authS, cfg.Secret)
 	userC := controller.NewUserController(userS)
 	tagC := controller.NewTagController(tagS)
-	s := delivery.NewHttpServer(authC, userC, tagC)
+	soundC := controller.NewSoundController(soundS)
+
+	s := delivery.NewHttpServer(authC, userC, tagC, soundC)
 
 	if err := s.Run(); err != nil {
 		log.Fatal(err)

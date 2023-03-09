@@ -12,6 +12,7 @@ type HttpServer struct {
 	auth    AuthController
 	user    UserController
 	tag     TagController
+	sound   SoundController
 }
 
 type ErrorResponse struct {
@@ -19,23 +20,31 @@ type ErrorResponse struct {
 	Message string `json:"message,omitempty"`
 }
 
-func NewHttpServer(auth AuthController, user UserController, tag TagController) *HttpServer {
-	router := gin.Default()
+func NewHttpServer(
+	auth AuthController,
+	user UserController,
+	tag TagController,
+	sound SoundController) *HttpServer {
 
 	return &HttpServer{
-		router: router,
+		router: gin.Default(),
 		auth:   auth,
 		user:   user,
 		tag:    tag,
+		sound:  sound,
 	}
 }
 
 func (s *HttpServer) Run() error {
 	s.router.POST("/register", s.register)
 	s.router.POST("/signin", s.login)
+
 	s.router.POST("/tags", s.createTag)
 	s.router.GET("/tags", s.getAllTags)
 	s.router.GET("/tags/:id", s.getTagById)
+
+	s.router.GET("/sounds", s.getAllSounds)
+	s.router.GET("/sounds/:id", s.getSoundById)
 
 	err := s.router.Run("localhost:8080")
 	if err != nil {
@@ -142,4 +151,33 @@ func (s *HttpServer) getTagById(ctx *gin.Context) {
 	}
 
 	ctx.IndentedJSON(200, resp)
+}
+
+func (s *HttpServer) getAllSounds(ctx *gin.Context) {
+	resp, err := s.sound.GetAllSounds()
+
+	if err != nil {
+		ctx.IndentedJSON(500, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(200, resp)
+}
+
+func (s *HttpServer) getSoundById(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	sound, err := s.sound.GetSoundById(id)
+	if err != nil {
+		ctx.IndentedJSON(500, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(200, sound)
 }

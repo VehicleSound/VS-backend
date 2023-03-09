@@ -2,11 +2,15 @@ package domain
 
 type Sound struct {
 	Id          string
-	AuthorId    string
 	Name        string
 	Description string
+	AuthorId    string
 	PictureUrl  string
 	SoundUrl    string
-	Tags        []Tag
-	Vehicle     *Vehicle
+	VehicleId   string
+
+	AuthorLogin string
+	VehicleName string
+
+	Tags []*Tag
 }
