@@ -14,6 +14,7 @@ type Repository interface {
 
 	CreateTag(title string) (*domain.Tag, error)
 	GetTagById(id string) (*domain.Tag, error)
+	GetAllTags() ([]*domain.Tag, error)
 	GetTagByTitle(title string) (*domain.Tag, error)
 
 	GetAllSounds(limit int) ([]*domain.Sound, error)

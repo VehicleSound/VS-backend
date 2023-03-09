@@ -14,17 +14,22 @@ func NewTagUseCase(repo Repository) *TagUseCase {
 	return &TagUseCase{repo: repo}
 }
 
-func (u *TagUseCase) CreateTag(name string) error {
+func (u *TagUseCase) CreateTag(name string) (string, error) {
 	if !validateTag(name) {
-		return errors.New("err create tag title too short")
+		return "", errors.New("err create tag title too short")
 	}
 
-	_, err := u.repo.CreateTag(name)
+	existing, err := u.repo.GetTagByTitle(name)
+	if err == nil && existing.Title == name {
+		return "", errors.New("err create tag: title already exists")
+	}
+
+	tag, err := u.repo.CreateTag(name)
 	if err != nil {
-		return fmt.Errorf("err create tag: %w", err)
+		return "", fmt.Errorf("err create tag: %w", err)
 	}
 
-	return nil
+	return tag.Id, nil
 }
 
 func (u *TagUseCase) GetTagById(id string) (*domain.Tag, error) {
@@ -45,3 +50,11 @@ func (u *TagUseCase) GetTagByTitle(title string) (*domain.Tag, error) {
 	return tag, nil
 }
 
+func (u *TagUseCase) GetAllTags() ([]*domain.Tag, error) {
+	tags, err := u.repo.GetAllTags()
+	if err != nil {
+		return nil, fmt.Errorf("err get all tags: %w", err)
+	}
+
+	return tags, nil
+}

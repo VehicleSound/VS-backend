@@ -36,11 +36,12 @@ func main() {
 
 	userS := usecase.NewUserUseCase(repo)
 	authS := usecase.NewAuthUseCase(repo)
+	tagS := usecase.NewTagUseCase(repo)
 
 	authC := controller.NewAuthController(authS, cfg.Secret)
 	userC := controller.NewUserController(userS)
-
-	s := delivery.NewHttpServer(authC, userC)
+	tagC := controller.NewTagController(tagS)
+	s := delivery.NewHttpServer(authC, userC, tagC)
 
 	if err := s.Run(); err != nil {
 		log.Fatal(err)

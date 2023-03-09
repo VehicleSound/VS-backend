@@ -11,3 +11,8 @@ type UserController interface {
 	ChangeEmail(req *controller.ChangeEmailRequest) error
 	ChangePassword(req *controller.ChangePasswordRequest) error
 }
+type TagController interface {
+	CreateTag(req *controller.CreateTagRequest) (*controller.CreateTagResponse, error)
+	GetAllTags() ([]*controller.TagResponse, error)
+	GetTagById(id string) (*controller.TagResponse, error)
+}

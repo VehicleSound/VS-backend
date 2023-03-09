@@ -8,6 +8,15 @@ type RegisterResponse struct {
 	UserId string `json:"user_id,omitempty"`
 }
 
+type CreateTagResponse struct {
+	TagId string `json:"tag_id,omitempty"`
+}
+
+type TagResponse struct {
+	Id    string `json:"id,omitempty"`
+	Title string `json:"title,omitempty"`
+}
+
 type AuthRequest struct {
 	Email    string `json:"email,omitempty"`
 	Password string `json:"password,omitempty"`
@@ -33,4 +42,8 @@ type ChangePasswordRequest struct {
 	UserId      string `json:"user_id,omitempty"`
 	OldPassword string `json:"old_password,omitempty"`
 	NewPassword string `json:"new_password,omitempty"`
+}
+
+type CreateTagRequest struct {
+	Title string `json:"title,omitempty"`
 }
