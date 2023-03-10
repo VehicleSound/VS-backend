@@ -53,8 +53,8 @@ func (s *HttpServer) configureRouter() {
 	s.router.POST("/api/v1/register", s.register)
 	s.router.POST("/api/v1/signin", s.login)
 
-	s.router.GET("/user/:id", s.getUserById)
-	s.router.POST("/user/search", s.getUserByCredentials)
+	s.router.GET("/api/v1/users/:id", s.getUserById)
+	s.router.POST("/api/v1/users/search", s.getUserByCredentials)
 
 	s.router.POST("/api/v1/tags", s.createTag)
 	s.router.GET("/api/v1/tags", s.getAllTags)
