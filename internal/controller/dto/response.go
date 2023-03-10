@@ -32,3 +32,11 @@ type GetUserResponse struct {
 	Active    bool   `json:"active,omitempty"`
 	Confirmed bool   `json:"confirmed,omitempty"`
 }
+
+type TokenResponse struct {
+	Id        string `json:"id,omitempty"`
+	Login     string `json:"login,omitempty"`
+	Email     string `json:"email,omitempty"`
+	Confirmed bool   `json:"confirmed,omitempty"`
+	Active    bool   `json:"active,omitempty"`
+}

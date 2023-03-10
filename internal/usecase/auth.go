@@ -4,7 +4,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"time"
+	"github.com/timickb/transport-sound/internal/domain"
 )
 
 type AuthUseCase struct {
@@ -27,10 +27,11 @@ func (u *AuthUseCase) SignIn(email, password, secret string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.MapClaims{
-		"login":      user.Login,
-		"email":      user.Email,
-		"authorized": true,
-		"exp":        time.Now().Add(10 * time.Minute),
+		"login":     user.Login,
+		"email":     user.Email,
+		"id":        user.Id,
+		"active":    user.Active,
+		"confirmed": user.Confirmed,
 	})
 
 	tokenStr, err := token.SignedString([]byte(secret))
@@ -39,4 +40,25 @@ func (u *AuthUseCase) SignIn(email, password, secret string) (string, error) {
 	}
 
 	return tokenStr, nil
+}
+
+func (u *AuthUseCase) ValidateToken(tokenRaw, secret string) (*domain.User, error) {
+	claims := jwt.MapClaims{}
+
+	_, err := jwt.ParseWithClaims(tokenRaw, claims, func(t *jwt.Token) (interface{}, error) {
+		return []byte(secret), nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("token validation failed: %w", err)
+	}
+
+	user := &domain.User{
+		Id:        fmt.Sprintf("%v", claims["id"]),
+		Login:     fmt.Sprintf("%v", claims["login"]),
+		Email:     fmt.Sprintf("%v", claims["email"]),
+		Confirmed: claims["confirmed"].(bool),
+		Active:    claims["active"].(bool),
+	}
+
+	return user, nil
 }

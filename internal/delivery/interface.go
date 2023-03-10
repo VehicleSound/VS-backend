@@ -7,6 +7,7 @@ import (
 
 type AuthController interface {
 	SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error)
+	ValidateToken(token string) (*dto.TokenResponse, error)
 }
 type UserController interface {
 	Register(req *dto.RegisterRequest) (*dto.RegisterResponse, error)

@@ -1,9 +1,13 @@
 package controller
 
-import "github.com/timickb/transport-sound/internal/controller/dto"
+import (
+	"github.com/timickb/transport-sound/internal/controller/dto"
+	"github.com/timickb/transport-sound/internal/domain"
+)
 
 type AuthUseCase interface {
 	SignIn(email, password, secret string) (string, error)
+	ValidateToken(tokenRaw, secret string) (*domain.User, error)
 }
 
 type AuthController struct {
@@ -22,4 +26,19 @@ func (c *AuthController) SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error)
 	}
 
 	return &dto.AuthResponse{Token: token}, nil
+}
+
+func (c *AuthController) ValidateToken(token string) (*dto.TokenResponse, error) {
+	user, err := c.u.ValidateToken(token, c.secret)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.TokenResponse{
+		Id:        user.Id,
+		Login:     user.Login,
+		Email:     user.Email,
+		Confirmed: user.Confirmed,
+		Active:    user.Active,
+	}, nil
 }
