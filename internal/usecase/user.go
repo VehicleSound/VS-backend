@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
+	"github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/repository"
 )
 
@@ -118,4 +119,28 @@ func (u *UserUseCase) Deactivate(id string) error {
 	}
 
 	return nil
+}
+
+func (u *UserUseCase) GetUserByLoginOrEmailOrId(cred string) (*domain.User, error) {
+	userById, errId := u.r.GetUserById(cred)
+	if errId == nil {
+		return userById, nil
+	}
+
+	userByLogin, errLogin := u.r.GetUserByLogin(cred)
+	if errLogin == nil {
+		return userByLogin, nil
+	}
+
+	userByEmail, errEmail := u.r.GetUserByEmail(cred)
+	if errEmail == nil {
+		return userByEmail, nil
+	}
+
+	errStr := fmt.Sprintf("err get user: %s, %s, %s",
+		errId.Error(),
+		errLogin.Error(),
+		errEmail.Error())
+
+	return nil, errors.New(errStr)
 }

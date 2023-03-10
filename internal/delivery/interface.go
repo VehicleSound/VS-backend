@@ -13,6 +13,8 @@ type UserController interface {
 	ChangeLogin(req *dto.ChangeLoginRequest) error
 	ChangeEmail(req *dto.ChangeEmailRequest) error
 	ChangePassword(req *dto.ChangePasswordRequest) error
+	GetUser(req *dto.GetUserRequest) (*dto.GetUserResponse, error)
+	GetUserById(id string) (*dto.GetUserResponse, error)
 }
 type TagController interface {
 	CreateTag(req *dto.CreateTagRequest) (*dto.CreateTagResponse, error)

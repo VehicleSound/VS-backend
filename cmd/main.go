@@ -7,7 +7,7 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/controller"
-	"github.com/timickb/transport-sound/internal/delivery"
+	"github.com/timickb/transport-sound/internal/delivery/http"
 	"github.com/timickb/transport-sound/internal/repository/postgres"
 	"github.com/timickb/transport-sound/internal/usecase"
 	"io/ioutil"
@@ -46,7 +46,7 @@ func main() {
 	soundC := controller.NewSoundController(soundS)
 	fileC := controller.NewFileController(fileS)
 
-	s := delivery.NewHttpServer(authC, userC, tagC, soundC, fileC)
+	s := http.NewHttpServer(authC, userC, tagC, soundC, fileC)
 
 	if err := s.Run(); err != nil {
 		log.Fatal(err)

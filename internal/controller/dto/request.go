@@ -46,3 +46,8 @@ type CreateSoundRequest struct {
 type UploadFileRequest struct {
 	File *multipart.FileHeader `form:"file"`
 }
+
+type GetUserRequest struct {
+	Login string `json:"login"`
+	Email string `json:"email"`
+}

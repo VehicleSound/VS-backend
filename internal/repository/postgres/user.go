@@ -51,7 +51,7 @@ func (p PqRepository) GetUserByLogin(login string) (*domain.User, error) {
 }
 
 func (p PqRepository) GetUserByEmail(email string) (*domain.User, error) {
-	row := p.db.QueryRow(fmt.Sprintf("SELECT * FROM users WHERE email='%s';", email))
+	row := p.db.QueryRow(`SELECT * FROM users WHERE email=$1`, email)
 
 	if row == nil {
 		return nil, errors.New("no such user")
@@ -74,8 +74,26 @@ func (p PqRepository) GetUserByEmail(email string) (*domain.User, error) {
 }
 
 func (p PqRepository) GetUserById(id string) (*domain.User, error) {
-	//TODO implement me
-	panic("implement me")
+	row := p.db.QueryRow(`SELECT * FROM users WHERE id=$1`, id)
+
+	if row == nil {
+		return nil, errors.New("no such user")
+	}
+
+	result := &domain.User{}
+
+	err := row.Scan(
+		&result.Id,
+		&result.Login,
+		&result.Email,
+		&result.Confirmed,
+		&result.PasswordHash,
+		&result.Active)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (p PqRepository) EditUser(id string, payload *repository.UserEditPayload) (*domain.User, error) {
