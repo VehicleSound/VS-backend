@@ -27,5 +27,10 @@ func (c *FileController) UploadImage(req *UploadFileRequest) (*UploadFileRespons
 }
 
 func (c *FileController) UploadSound(req *UploadFileRequest) (*UploadFileResponse, error) {
-	panic("implement me")
+	id, err := c.u.UploadSound("static/sounds/", req.File)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UploadFileResponse{FileId: id}, nil
 }

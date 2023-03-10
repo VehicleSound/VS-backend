@@ -51,6 +51,7 @@ func (s *HttpServer) Run() error {
 	s.router.GET("/sounds/:id", s.getSoundById)
 
 	s.router.POST("/upload_image", s.uploadImage)
+	s.router.POST("/upload_sound", s.uploadSound)
 
 	err := s.router.Run("localhost:8080")
 	if err != nil {
@@ -199,6 +200,28 @@ func (s *HttpServer) uploadImage(ctx *gin.Context) {
 	}
 
 	resp, err := s.file.UploadImage(req)
+	if err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(200, resp)
+}
+
+func (s *HttpServer) uploadSound(ctx *gin.Context) {
+	req := &controller.UploadFileRequest{}
+	if err := ctx.ShouldBind(req); err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: "Invalid body",
+		})
+		return
+	}
+
+	resp, err := s.file.UploadSound(req)
 	if err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
 			Code:    400,
