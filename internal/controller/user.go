@@ -1,5 +1,7 @@
 package controller
 
+import "github.com/timickb/transport-sound/internal/controller/dto"
+
 type UserUseCase interface {
 	CreateUser(login, email, password string) (string, error)
 	ChangePassword(id, oPwd, nPwd string) error
@@ -16,16 +18,16 @@ func NewUserController(u UserUseCase) *UserController {
 	return &UserController{u: u}
 }
 
-func (c *UserController) Register(req *RegisterRequest) (*RegisterResponse, error) {
+func (c *UserController) Register(req *dto.RegisterRequest) (*dto.RegisterResponse, error) {
 	userId, err := c.u.CreateUser(req.Login, req.Email, req.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	return &RegisterResponse{UserId: userId}, nil
+	return &dto.RegisterResponse{UserId: userId}, nil
 }
 
-func (c *UserController) ChangeLogin(req *ChangeLoginRequest) error {
+func (c *UserController) ChangeLogin(req *dto.ChangeLoginRequest) error {
 	err := c.u.ChangeLogin(req.UserId, req.Login)
 	if err != nil {
 		return err
@@ -33,7 +35,7 @@ func (c *UserController) ChangeLogin(req *ChangeLoginRequest) error {
 	return nil
 }
 
-func (c *UserController) ChangeEmail(req *ChangeEmailRequest) error {
+func (c *UserController) ChangeEmail(req *dto.ChangeEmailRequest) error {
 	err := c.u.ChangeEmail(req.UserId, req.Email)
 	if err != nil {
 		return err
@@ -41,7 +43,7 @@ func (c *UserController) ChangeEmail(req *ChangeEmailRequest) error {
 	return nil
 }
 
-func (c *UserController) ChangePassword(req *ChangePasswordRequest) error {
+func (c *UserController) ChangePassword(req *dto.ChangePasswordRequest) error {
 	err := c.u.ChangePassword(req.UserId, req.OldPassword, req.NewPassword)
 	if err != nil {
 		return err

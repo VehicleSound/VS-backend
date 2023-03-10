@@ -5,6 +5,35 @@ import (
 	"github.com/timickb/transport-sound/internal/domain"
 )
 
+func (p PqRepository) AddTagToSound(soundId, tagId string) error {
+	query := `INSERT INTO sound_tags (sound_id, tag_id) VALUES($1, $2)`
+
+	if _, err := p.db.Exec(query, soundId, tagId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (p PqRepository) CreateSound(sound *domain.Sound) error {
+	query := `INSERT INTO sounds
+    		(id, name, description, author_id, vehicle_id, sound_file_id, picture_file_id) 
+			VALUES ($1, $2, $3, $4, $5, $6, $7)`
+
+	if _, err := p.db.Exec(query,
+		sound.Id,
+		sound.Name,
+		sound.Description,
+		sound.AuthorId,
+		sound.VehicleId,
+		sound.SoundFileId,
+		sound.PictureFileId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (p PqRepository) GetSoundById(id string) (*domain.Sound, error) {
 	query := `SELECT s.id, s.name, s.description, s.author_id, s.vehicle_id, u.login, v.name 
 			FROM sounds s

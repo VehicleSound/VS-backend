@@ -1,29 +1,30 @@
 package delivery
 
 import (
-	"github.com/timickb/transport-sound/internal/controller"
+	"github.com/timickb/transport-sound/internal/controller/dto"
 	"github.com/timickb/transport-sound/internal/domain"
 )
 
 type AuthController interface {
-	SignIn(req *controller.AuthRequest) (*controller.AuthResponse, error)
+	SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error)
 }
 type UserController interface {
-	Register(req *controller.RegisterRequest) (*controller.RegisterResponse, error)
-	ChangeLogin(req *controller.ChangeLoginRequest) error
-	ChangeEmail(req *controller.ChangeEmailRequest) error
-	ChangePassword(req *controller.ChangePasswordRequest) error
+	Register(req *dto.RegisterRequest) (*dto.RegisterResponse, error)
+	ChangeLogin(req *dto.ChangeLoginRequest) error
+	ChangeEmail(req *dto.ChangeEmailRequest) error
+	ChangePassword(req *dto.ChangePasswordRequest) error
 }
 type TagController interface {
-	CreateTag(req *controller.CreateTagRequest) (*controller.CreateTagResponse, error)
-	GetAllTags() ([]*controller.TagResponse, error)
-	GetTagById(id string) (*controller.TagResponse, error)
+	CreateTag(req *dto.CreateTagRequest) (*dto.CreateTagResponse, error)
+	GetAllTags() ([]*dto.TagResponse, error)
+	GetTagById(id string) (*dto.TagResponse, error)
 }
 type SoundController interface {
+	CreateSound(req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error)
 	GetAllSounds() ([]*domain.Sound, error)
 	GetSoundById(id string) (*domain.Sound, error)
 }
 type FileController interface {
-	UploadImage(req *controller.UploadFileRequest) (*controller.UploadFileResponse, error)
-	UploadSound(req *controller.UploadFileRequest) (*controller.UploadFileResponse, error)
+	UploadImage(req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
+	UploadSound(req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
 }

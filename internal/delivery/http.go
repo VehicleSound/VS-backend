@@ -3,7 +3,7 @@ package delivery
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/timickb/transport-sound/internal/controller"
+	"github.com/timickb/transport-sound/internal/controller/dto"
 )
 
 type HttpServer struct {
@@ -40,18 +40,22 @@ func NewHttpServer(
 }
 
 func (s *HttpServer) Run() error {
-	s.router.POST("/register", s.register)
-	s.router.POST("/signin", s.login)
+	s.router.Static("/assets/images", "./static/images")
+	s.router.Static("/assets/sounds", "./static/sounds")
 
-	s.router.POST("/tags", s.createTag)
-	s.router.GET("/tags", s.getAllTags)
-	s.router.GET("/tags/:id", s.getTagById)
+	s.router.POST("/api/v1/register", s.register)
+	s.router.POST("/api/v1/signin", s.login)
 
-	s.router.GET("/sounds", s.getAllSounds)
-	s.router.GET("/sounds/:id", s.getSoundById)
+	s.router.POST("/api/v1/tags", s.createTag)
+	s.router.GET("/api/v1/tags", s.getAllTags)
+	s.router.GET("/api/v1/tags/:id", s.getTagById)
 
-	s.router.POST("/upload_image", s.uploadImage)
-	s.router.POST("/upload_sound", s.uploadSound)
+	s.router.GET("/api/v1/sounds", s.getAllSounds)
+	s.router.GET("/api/v1/sounds/:id", s.getSoundById)
+	s.router.POST("/api/v1/sounds", s.createSound)
+
+	s.router.POST("/api/v1/upload_image", s.uploadImage)
+	s.router.POST("/api/v1/upload_sound", s.uploadSound)
 
 	err := s.router.Run("localhost:8080")
 	if err != nil {
@@ -63,7 +67,7 @@ func (s *HttpServer) Run() error {
 }
 
 func (s *HttpServer) login(ctx *gin.Context) {
-	req := controller.AuthRequest{}
+	req := dto.AuthRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
@@ -86,7 +90,7 @@ func (s *HttpServer) login(ctx *gin.Context) {
 }
 
 func (s *HttpServer) register(ctx *gin.Context) {
-	req := controller.RegisterRequest{}
+	req := dto.RegisterRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
@@ -109,7 +113,7 @@ func (s *HttpServer) register(ctx *gin.Context) {
 }
 
 func (s *HttpServer) createTag(ctx *gin.Context) {
-	req := controller.CreateTagRequest{}
+	req := dto.CreateTagRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
@@ -190,7 +194,7 @@ func (s *HttpServer) getSoundById(ctx *gin.Context) {
 }
 
 func (s *HttpServer) uploadImage(ctx *gin.Context) {
-	req := &controller.UploadFileRequest{}
+	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
 			Code:    400,
@@ -212,7 +216,7 @@ func (s *HttpServer) uploadImage(ctx *gin.Context) {
 }
 
 func (s *HttpServer) uploadSound(ctx *gin.Context) {
-	req := &controller.UploadFileRequest{}
+	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
 			Code:    400,
@@ -229,6 +233,25 @@ func (s *HttpServer) uploadSound(ctx *gin.Context) {
 		})
 		return
 	}
+	ctx.IndentedJSON(200, resp)
+}
 
+func (s *HttpServer) createSound(ctx *gin.Context) {
+	req := &dto.CreateSoundRequest{}
+	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: "Invalid body",
+		})
+	}
+
+	resp, err := s.sound.CreateSound(req)
+	if err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+		return
+	}
 	ctx.IndentedJSON(200, resp)
 }

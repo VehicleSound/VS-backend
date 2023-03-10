@@ -18,10 +18,15 @@ type Repository interface {
 	GetTagByTitle(title string) (*domain.Tag, error)
 	GetTagsForSound(soundId string) ([]*domain.Tag, error)
 
+	AddTagToSound(soundId, tagId string) error
+	CreateSound(sound *domain.Sound) error
 	GetSoundById(id string) (*domain.Sound, error)
 	GetAllSounds() ([]*domain.Sound, error)
 	GetSounds(limit, offset int) ([]*domain.Sound, error)
 	GetSoundsNameLike(name string) ([]*domain.Sound, error)
 	GetSoundsByTagId(tagId string) ([]*domain.Sound, error)
 	GetSoundsByVehicleId(vehicleId string) ([]*domain.Sound, error)
+
+	CreateFile(id, ext string) error
+	GetFileExtById(id string) (string, error)
 }

@@ -1,23 +1,6 @@
-package controller
+package dto
 
 import "mime/multipart"
-
-type AuthResponse struct {
-	Token string `json:"token,omitempty"`
-}
-
-type RegisterResponse struct {
-	UserId string `json:"user_id,omitempty"`
-}
-
-type CreateTagResponse struct {
-	TagId string `json:"tag_id,omitempty"`
-}
-
-type TagResponse struct {
-	Id    string `json:"id,omitempty"`
-	Title string `json:"title,omitempty"`
-}
 
 type AuthRequest struct {
 	Email    string `json:"email,omitempty"`
@@ -50,10 +33,16 @@ type CreateTagRequest struct {
 	Title string `json:"title,omitempty"`
 }
 
-type UploadFileRequest struct {
-	File *multipart.FileHeader `form:"file"`
+type CreateSoundRequest struct {
+	Name          string   `json:"name,omitempty"`
+	Description   string   `json:"description,omitempty"`
+	PictureFileId string   `json:"picture_id,omitempty"`
+	SoundFileId   string   `json:"sound_id,omitempty"`
+	TagIds        []string `json:"tag_ids,omitempty"`
+	VehicleId     string   `json:"vehicle_id,omitempty"`
+	AuthorId      string   `json:"author_id,omitempty"`
 }
 
-type UploadFileResponse struct {
-	FileId string `json:"file_id,omitempty"`
+type UploadFileRequest struct {
+	File *multipart.FileHeader `form:"file"`
 }

@@ -42,6 +42,10 @@ func (u *FileUseCase) UploadImage(savePath string, fh *multipart.FileHeader) (st
 		return "", fmt.Errorf("err upload image: %w", err)
 	}
 
+	if err := u.r.CreateFile(id, ext); err != nil {
+		return "", fmt.Errorf("err upload image: %w", err)
+	}
+
 	return id, nil
 }
 
@@ -63,6 +67,10 @@ func (u *FileUseCase) UploadSound(savePath string, fh *multipart.FileHeader) (st
 
 	id, err := u.uploadFile(&file, savePath, ext)
 	if err != nil {
+		return "", fmt.Errorf("err upload sound: %w", err)
+	}
+
+	if err := u.r.CreateFile(id, ext); err != nil {
 		return "", fmt.Errorf("err upload sound: %w", err)
 	}
 

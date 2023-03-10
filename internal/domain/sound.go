@@ -1,13 +1,13 @@
 package domain
 
 type Sound struct {
-	Id          string
-	Name        string
-	Description string
-	AuthorId    string
-	PictureUrl  string
-	SoundUrl    string
-	VehicleId   string
+	Id            string
+	Name          string
+	Description   string
+	AuthorId      string
+	PictureFileId string
+	SoundFileId   string
+	VehicleId     string
 
 	AuthorLogin string
 	VehicleName string

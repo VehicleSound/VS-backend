@@ -1,5 +1,7 @@
 package controller
 
+import "github.com/timickb/transport-sound/internal/controller/dto"
+
 type AuthUseCase interface {
 	SignIn(email, password, secret string) (string, error)
 }
@@ -13,11 +15,11 @@ func NewAuthController(u AuthUseCase, secret string) *AuthController {
 	return &AuthController{u: u}
 }
 
-func (c *AuthController) SignIn(req *AuthRequest) (*AuthResponse, error) {
+func (c *AuthController) SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error) {
 	token, err := c.u.SignIn(req.Email, req.Password, c.secret)
 	if err != nil {
 		return nil, err
 	}
 
-	return &AuthResponse{Token: token}, nil
+	return &dto.AuthResponse{Token: token}, nil
 }

@@ -1,10 +1,14 @@
 package controller
 
-import "github.com/timickb/transport-sound/internal/domain"
+import (
+	"github.com/timickb/transport-sound/internal/controller/dto"
+	"github.com/timickb/transport-sound/internal/domain"
+)
 
 type SoundUseCase interface {
 	GetAllSounds() ([]*domain.Sound, error)
 	GetSoundById(id string) (*domain.Sound, error)
+	CreateSound(s *domain.Sound, tid []string) (string, error)
 }
 
 type SoundController struct {
@@ -29,4 +33,22 @@ func (c *SoundController) GetSoundById(id string) (*domain.Sound, error) {
 		return nil, err
 	}
 	return sound, nil
+}
+
+func (c *SoundController) CreateSound(req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error) {
+	sound := &domain.Sound{
+		Name:          req.Name,
+		Description:   req.Description,
+		AuthorId:      req.AuthorId,
+		PictureFileId: req.PictureFileId,
+		SoundFileId:   req.SoundFileId,
+		VehicleId:     req.VehicleId,
+	}
+
+	id, err := c.u.CreateSound(sound, req.TagIds)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.CreateSoundResponse{SoundId: id}, nil
 }
