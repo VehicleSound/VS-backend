@@ -9,10 +9,12 @@ import (
 type HttpServer struct {
 	router  *gin.Engine
 	running bool
-	auth    AuthController
-	user    UserController
-	tag     TagController
-	sound   SoundController
+
+	auth  AuthController
+	user  UserController
+	tag   TagController
+	sound SoundController
+	file  FileController
 }
 
 type ErrorResponse struct {
@@ -24,7 +26,8 @@ func NewHttpServer(
 	auth AuthController,
 	user UserController,
 	tag TagController,
-	sound SoundController) *HttpServer {
+	sound SoundController,
+	file FileController) *HttpServer {
 
 	return &HttpServer{
 		router: gin.Default(),
@@ -32,6 +35,7 @@ func NewHttpServer(
 		user:   user,
 		tag:    tag,
 		sound:  sound,
+		file:   file,
 	}
 }
 
@@ -45,6 +49,8 @@ func (s *HttpServer) Run() error {
 
 	s.router.GET("/sounds", s.getAllSounds)
 	s.router.GET("/sounds/:id", s.getSoundById)
+
+	s.router.POST("/upload_image", s.uploadImage)
 
 	err := s.router.Run("localhost:8080")
 	if err != nil {
@@ -180,4 +186,26 @@ func (s *HttpServer) getSoundById(ctx *gin.Context) {
 	}
 
 	ctx.IndentedJSON(200, sound)
+}
+
+func (s *HttpServer) uploadImage(ctx *gin.Context) {
+	req := &controller.UploadFileRequest{}
+	if err := ctx.ShouldBind(req); err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: "Invalid body",
+		})
+		return
+	}
+
+	resp, err := s.file.UploadImage(req)
+	if err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(200, resp)
 }

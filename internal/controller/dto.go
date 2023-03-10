@@ -1,5 +1,7 @@
 package controller
 
+import "mime/multipart"
+
 type AuthResponse struct {
 	Token string `json:"token,omitempty"`
 }
@@ -46,4 +48,12 @@ type ChangePasswordRequest struct {
 
 type CreateTagRequest struct {
 	Title string `json:"title,omitempty"`
+}
+
+type UploadFileRequest struct {
+	File *multipart.FileHeader `form:"file"`
+}
+
+type UploadFileResponse struct {
+	FileId string `json:"file_id,omitempty"`
 }

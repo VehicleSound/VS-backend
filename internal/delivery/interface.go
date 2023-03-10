@@ -23,3 +23,7 @@ type SoundController interface {
 	GetAllSounds() ([]*domain.Sound, error)
 	GetSoundById(id string) (*domain.Sound, error)
 }
+type FileController interface {
+	UploadImage(req *controller.UploadFileRequest) (*controller.UploadFileResponse, error)
+	UploadSound(req *controller.UploadFileRequest) (*controller.UploadFileResponse, error)
+}
