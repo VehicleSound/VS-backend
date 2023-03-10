@@ -1,4 +1,5 @@
 {
+  "port": 8080,
   "secret": "secret",
   "db_name": "soundp",
   "db_user": "timickb",

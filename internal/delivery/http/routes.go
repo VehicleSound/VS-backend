@@ -6,7 +6,7 @@ import (
 	"github.com/timickb/transport-sound/internal/controller/dto"
 )
 
-func (s *HttpServer) login(ctx *gin.Context) {
+func (s *Server) login(ctx *gin.Context) {
 	req := dto.AuthRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
@@ -29,7 +29,7 @@ func (s *HttpServer) login(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) register(ctx *gin.Context) {
+func (s *Server) register(ctx *gin.Context) {
 	req := dto.RegisterRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
@@ -52,7 +52,7 @@ func (s *HttpServer) register(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) createTag(ctx *gin.Context) {
+func (s *Server) createTag(ctx *gin.Context) {
 	req := dto.CreateTagRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
@@ -75,7 +75,7 @@ func (s *HttpServer) createTag(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) getAllTags(ctx *gin.Context) {
+func (s *Server) getAllTags(ctx *gin.Context) {
 	resp, err := s.tag.GetAllTags()
 
 	if err != nil {
@@ -89,7 +89,7 @@ func (s *HttpServer) getAllTags(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) getTagById(ctx *gin.Context) {
+func (s *Server) getTagById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	resp, err := s.tag.GetTagById(id)
 
@@ -104,7 +104,7 @@ func (s *HttpServer) getTagById(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) getAllSounds(ctx *gin.Context) {
+func (s *Server) getAllSounds(ctx *gin.Context) {
 	resp, err := s.sound.GetAllSounds()
 
 	if err != nil {
@@ -118,7 +118,7 @@ func (s *HttpServer) getAllSounds(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) getSoundById(ctx *gin.Context) {
+func (s *Server) getSoundById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	sound, err := s.sound.GetSoundById(id)
@@ -133,7 +133,7 @@ func (s *HttpServer) getSoundById(ctx *gin.Context) {
 	ctx.IndentedJSON(200, sound)
 }
 
-func (s *HttpServer) uploadImage(ctx *gin.Context) {
+func (s *Server) uploadImage(ctx *gin.Context) {
 	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
@@ -155,7 +155,7 @@ func (s *HttpServer) uploadImage(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) uploadSound(ctx *gin.Context) {
+func (s *Server) uploadSound(ctx *gin.Context) {
 	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
@@ -176,7 +176,7 @@ func (s *HttpServer) uploadSound(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) createSound(ctx *gin.Context) {
+func (s *Server) createSound(ctx *gin.Context) {
 	req := &dto.CreateSoundRequest{}
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
@@ -196,7 +196,7 @@ func (s *HttpServer) createSound(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) getUserById(ctx *gin.Context) {
+func (s *Server) getUserById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	resp, err := s.user.GetUserById(id)
@@ -211,7 +211,7 @@ func (s *HttpServer) getUserById(ctx *gin.Context) {
 	ctx.IndentedJSON(200, resp)
 }
 
-func (s *HttpServer) getUserByCredentials(ctx *gin.Context) {
+func (s *Server) getUserByCredentials(ctx *gin.Context) {
 	req := &dto.GetUserRequest{}
 
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {

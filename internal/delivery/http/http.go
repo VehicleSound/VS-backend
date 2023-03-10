@@ -1,16 +1,16 @@
 package http
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/delivery"
 	"strings"
 )
 
-type HttpServer struct {
-	router  *gin.Engine
-	config  *config.Config
-	running bool
+type Server struct {
+	router *gin.Engine
+	config *config.Config
 
 	auth  delivery.AuthController
 	user  delivery.UserController
@@ -25,9 +25,9 @@ func NewHttpServer(
 	user delivery.UserController,
 	tag delivery.TagController,
 	sound delivery.SoundController,
-	file delivery.FileController) *HttpServer {
+	file delivery.FileController) *Server {
 
-	s := &HttpServer{
+	s := &Server{
 		router: gin.Default(),
 		config: config,
 		auth:   auth,
@@ -41,21 +41,22 @@ func NewHttpServer(
 	return s
 }
 
-func (s *HttpServer) Run() error {
-	err := s.router.Run("localhost:8080")
+func (s *Server) Run() error {
+	err := s.router.Run(fmt.Sprintf(":%d", s.config.Port))
 	if err != nil {
 		return err
 	}
 
-	s.running = true
 	return nil
 }
 
-func (s *HttpServer) authMiddleware(ctx *gin.Context) {
-	if ctx.Request.RequestURI == "/api/v1/signin" {
+func (s *Server) authMiddleware(ctx *gin.Context) {
+	if strings.HasSuffix(ctx.Request.RequestURI, "signin") ||
+		strings.HasSuffix(ctx.Request.RequestURI, "register") {
 		ctx.Next()
 		return
 	}
+
 	hv := ctx.Request.Header.Get("Authorization")
 
 	if hv != "" && len(strings.Split(hv, " ")) == 2 {
@@ -81,7 +82,7 @@ func (s *HttpServer) authMiddleware(ctx *gin.Context) {
 	})
 }
 
-func (s *HttpServer) corsMiddleware(ctx *gin.Context) {
+func (s *Server) corsMiddleware(ctx *gin.Context) {
 	ctx.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	ctx.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 	ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
@@ -95,7 +96,7 @@ func (s *HttpServer) corsMiddleware(ctx *gin.Context) {
 	ctx.Next()
 }
 
-func (s *HttpServer) configureRouter() {
+func (s *Server) configureRouter() {
 	s.router.Use(s.corsMiddleware)
 	s.router.Use(s.authMiddleware)
 

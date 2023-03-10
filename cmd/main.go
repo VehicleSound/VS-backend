@@ -46,7 +46,7 @@ func main() {
 	soundC := controller.NewSoundController(soundS)
 	fileC := controller.NewFileController(fileS)
 
-	s := http.NewHttpServer(authC, userC, tagC, soundC, fileC)
+	s := http.NewHttpServer(cfg, authC, userC, tagC, soundC, fileC)
 
 	if err := s.Run(); err != nil {
 		log.Fatal(err)
