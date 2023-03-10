@@ -36,8 +36,8 @@ type CreateTagRequest struct {
 type CreateSoundRequest struct {
 	Name          string   `json:"name,omitempty"`
 	Description   string   `json:"description,omitempty"`
-	PictureFileId string   `json:"picture_id,omitempty"`
-	SoundFileId   string   `json:"sound_id,omitempty"`
+	PictureFileId string   `json:"picture_file_id,omitempty"`
+	SoundFileId   string   `json:"sound_file_id,omitempty"`
 	TagIds        []string `json:"tag_ids,omitempty"`
 	VehicleId     string   `json:"vehicle_id,omitempty"`
 	AuthorId      string   `json:"author_id,omitempty"`
