@@ -34,4 +34,5 @@ type SoundController interface {
 	GetAllSounds() ([]*domain.Sound, error)
 	GetSoundById(id string) (*domain.Sound, error)
 	CreateSound(t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error)
+	GetRandomSounds(limit int) ([]*domain.Sound, error)
 }

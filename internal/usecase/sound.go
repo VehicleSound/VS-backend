@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/domain"
+	"math/rand"
+	"time"
 )
 
 type SoundUseCase struct {
@@ -65,4 +67,22 @@ func (u *SoundUseCase) CreateSound(ctx UserContext, s *domain.Sound, tid []strin
 	}
 
 	return s.Id, nil
+}
+
+func (u *SoundUseCase) GetRandomSounds(limit int) ([]*domain.Sound, error) {
+	sounds, err := u.r.GetAllSounds()
+	if err != nil {
+		return nil, err
+	}
+
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(sounds), func(i, j int) {
+		sounds[i], sounds[j] = sounds[j], sounds[i]
+	})
+
+	if len(sounds) <= limit {
+		return sounds, nil
+	}
+
+	return sounds[:limit], nil
 }

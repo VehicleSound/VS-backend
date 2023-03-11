@@ -252,3 +252,15 @@ func (s *Server) searchSounds(ctx *gin.Context) {
 
 	ctx.IndentedJSON(200, resp)
 }
+
+func (s *Server) randomSounds(ctx *gin.Context) {
+	resp, err := s.sound.GetRandomSounds(20)
+	if err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+	}
+
+	ctx.IndentedJSON(200, resp)
+}

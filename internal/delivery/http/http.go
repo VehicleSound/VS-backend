@@ -55,7 +55,8 @@ func (s *Server) Run() error {
 
 func (s *Server) authMiddleware(ctx *gin.Context) {
 	if strings.HasSuffix(ctx.Request.RequestURI, "signin") ||
-		strings.HasSuffix(ctx.Request.RequestURI, "register") {
+		strings.HasSuffix(ctx.Request.RequestURI, "register") ||
+		strings.HasPrefix(ctx.Request.RequestURI, "/assets") {
 		ctx.Next()
 		return
 	}
@@ -114,10 +115,10 @@ func (s *Server) configureRouter() {
 	s.router.GET("/api/v1/sounds", s.getAllSounds)
 	s.router.GET("/api/v1/sounds/:id", s.getSoundById)
 	s.router.POST("/api/v1/sounds", s.createSound)
+	s.router.GET("/api/v1/random", s.randomSounds)
 
 	s.router.POST("/api/v1/search", s.searchSounds)
 
 	s.router.POST("/api/v1/upload_image", s.uploadImage)
 	s.router.POST("/api/v1/upload_sound", s.uploadSound)
 }
-

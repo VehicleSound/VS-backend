@@ -10,6 +10,7 @@ type SoundUseCase interface {
 	GetAllSounds() ([]*domain.Sound, error)
 	GetSoundById(id string) (*domain.Sound, error)
 	CreateSound(ctx usecase.UserContext, s *domain.Sound, tid []string) (string, error)
+	GetRandomSounds(limit int) ([]*domain.Sound, error)
 }
 
 type SoundController struct {
@@ -52,4 +53,13 @@ func (c *SoundController) CreateSound(t *dto.TokenResponse, req *dto.CreateSound
 	}
 
 	return &dto.CreateSoundResponse{SoundId: id}, nil
+}
+
+func (c *SoundController) GetRandomSounds(limit int) ([]*domain.Sound, error) {
+	sounds, err := c.u.GetRandomSounds(limit)
+	if err != nil {
+		return nil, err
+	}
+
+	return sounds, nil
 }
