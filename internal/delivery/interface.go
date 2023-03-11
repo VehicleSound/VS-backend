@@ -22,12 +22,16 @@ type TagController interface {
 	GetAllTags() ([]*dto.TagResponse, error)
 	GetTagById(id string) (*dto.TagResponse, error)
 }
-type SoundController interface {
-	CreateSound(req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error)
-	GetAllSounds() ([]*domain.Sound, error)
-	GetSoundById(id string) (*domain.Sound, error)
-}
+
 type FileController interface {
 	UploadImage(req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
 	UploadSound(req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
+}
+type SearchController interface {
+	Search(req *dto.SearchRequest) ([]*domain.Sound, error)
+}
+type SoundController interface {
+	GetAllSounds() ([]*domain.Sound, error)
+	GetSoundById(id string) (*domain.Sound, error)
+	CreateSound(t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error)
 }

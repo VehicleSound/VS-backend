@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/repository"
+	"time"
 )
 
 type Repository interface {
@@ -29,4 +30,10 @@ type Repository interface {
 
 	CreateFile(id, ext string) error
 	GetFileExtById(id string) (string, error)
+}
+type UserContext interface {
+	User() *domain.User
+	CreatedAt() time.Time
+	Get(key string) interface{}
+	Add(key string, val interface{})
 }

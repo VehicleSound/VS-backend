@@ -38,7 +38,7 @@ func (u *SoundUseCase) GetAllSounds() ([]*domain.Sound, error) {
 	return sounds, nil
 }
 
-func (u *SoundUseCase) CreateSound(s *domain.Sound, tid []string) (string, error) {
+func (u *SoundUseCase) CreateSound(ctx UserContext, s *domain.Sound, tid []string) (string, error) {
 	// Check each tag for existing.
 	for _, tagId := range tid {
 		_, err := u.r.GetTagById(tagId)

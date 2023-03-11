@@ -185,7 +185,7 @@ func (s *Server) createSound(ctx *gin.Context) {
 		})
 	}
 
-	resp, err := s.sound.CreateSound(req)
+	resp, err := s.sound.CreateSound(nil, req)
 	if err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
 			Code:    400,
@@ -222,6 +222,27 @@ func (s *Server) getUserByCredentials(ctx *gin.Context) {
 	}
 
 	resp, err := s.user.GetUser(req)
+	if err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+	}
+
+	ctx.IndentedJSON(200, resp)
+}
+
+func (s *Server) searchSounds(ctx *gin.Context) {
+	req := &dto.SearchRequest{}
+
+	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: "Invalid body",
+		})
+	}
+
+	resp, err := s.search.Search(req)
 	if err != nil {
 		ctx.IndentedJSON(400, &ErrorResponse{
 			Code:    400,

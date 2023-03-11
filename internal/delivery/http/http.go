@@ -12,11 +12,12 @@ type Server struct {
 	router *gin.Engine
 	config *config.Config
 
-	auth  delivery.AuthController
-	user  delivery.UserController
-	tag   delivery.TagController
-	sound delivery.SoundController
-	file  delivery.FileController
+	auth   delivery.AuthController
+	user   delivery.UserController
+	tag    delivery.TagController
+	sound  delivery.SoundController
+	file   delivery.FileController
+	search delivery.SearchController
 }
 
 func NewHttpServer(
@@ -25,7 +26,8 @@ func NewHttpServer(
 	user delivery.UserController,
 	tag delivery.TagController,
 	sound delivery.SoundController,
-	file delivery.FileController) *Server {
+	file delivery.FileController,
+	search delivery.SearchController) *Server {
 
 	s := &Server{
 		router: gin.Default(),
@@ -35,6 +37,7 @@ func NewHttpServer(
 		tag:    tag,
 		sound:  sound,
 		file:   file,
+		search: search,
 	}
 
 	s.configureRouter()
@@ -112,6 +115,9 @@ func (s *Server) configureRouter() {
 	s.router.GET("/api/v1/sounds/:id", s.getSoundById)
 	s.router.POST("/api/v1/sounds", s.createSound)
 
+	s.router.POST("/api/v1/search", s.searchSounds)
+
 	s.router.POST("/api/v1/upload_image", s.uploadImage)
 	s.router.POST("/api/v1/upload_sound", s.uploadSound)
 }
+

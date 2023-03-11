@@ -111,8 +111,33 @@ func (p PqRepository) GetSounds(limit, offset int) ([]*domain.Sound, error) {
 }
 
 func (p PqRepository) GetSoundsNameLike(name string) ([]*domain.Sound, error) {
-	//TODO implement me
-	panic("implement me")
+	rows, err := p.db.Query(
+		`SELECT s.id, s.name, s.description, s.author_id, s.vehicle_id, u.login, v.name
+				FROM sounds s 
+    			JOIN users u on s.author_id = u.id 
+         		JOIN vehicles v on v.id = s.vehicle_id
+         		WHERE lower(s.name) LIKE '%' || $1 || '%'`, name)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*domain.Sound
+
+	for rows.Next() {
+		s := &domain.Sound{}
+		err := rows.Scan(&s.Id, &s.Name, &s.Description, &s.AuthorId, &s.VehicleId, &s.AuthorLogin, &s.VehicleName)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, s)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (p PqRepository) GetSoundsByTagId(tagId string) ([]*domain.Sound, error) {

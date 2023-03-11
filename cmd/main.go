@@ -39,14 +39,16 @@ func main() {
 	tagS := usecase.NewTagUseCase(repo)
 	soundS := usecase.NewSoundUseCase(repo)
 	fileS := usecase.NewFileUseCase(repo)
+	searchS := usecase.NewSearchUseCase(repo)
 
 	authC := controller.NewAuthController(authS, cfg.Secret)
 	userC := controller.NewUserController(userS)
 	tagC := controller.NewTagController(tagS)
 	soundC := controller.NewSoundController(soundS)
 	fileC := controller.NewFileController(fileS)
+	searchC := controller.NewSearchController(searchS)
 
-	s := http.NewHttpServer(cfg, authC, userC, tagC, soundC, fileC)
+	s := http.NewHttpServer(cfg, authC, userC, tagC, soundC, fileC, searchC)
 
 	if err := s.Run(); err != nil {
 		log.Fatal(err)

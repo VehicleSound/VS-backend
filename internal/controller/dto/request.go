@@ -51,3 +51,9 @@ type GetUserRequest struct {
 	Login string `json:"login"`
 	Email string `json:"email"`
 }
+
+type SearchRequest struct {
+	Name       string   `json:"name"`
+	TagIds     []string `json:"tag_ids"`
+	VehicleIds []string `json:"vehicle_ids"`
+}
