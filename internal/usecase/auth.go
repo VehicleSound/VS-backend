@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/timickb/transport-sound/internal/domain"
+	"time"
 )
 
 type AuthUseCase struct {
@@ -32,6 +33,8 @@ func (u *AuthUseCase) SignIn(email, password, secret string) (string, error) {
 		"id":        user.Id,
 		"active":    user.Active,
 		"confirmed": user.Confirmed,
+		"iat":       time.Now().Unix(),
+		"exp":       time.Now().Add(time.Hour).Unix(),
 	})
 
 	tokenStr, err := token.SignedString([]byte(secret))

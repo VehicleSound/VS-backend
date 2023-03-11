@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/domain"
@@ -30,10 +29,6 @@ func (p PqRepository) CreateUser(login, email, pwdHash string) (string, error) {
 func (p PqRepository) GetUserByLogin(login string) (*domain.User, error) {
 	row := p.db.QueryRow(fmt.Sprintf("SELECT * FROM users WHERE login='%s';", login))
 
-	if row == nil {
-		return nil, errors.New("no such user")
-	}
-
 	result := &domain.User{}
 
 	err := row.Scan(
@@ -53,10 +48,6 @@ func (p PqRepository) GetUserByLogin(login string) (*domain.User, error) {
 func (p PqRepository) GetUserByEmail(email string) (*domain.User, error) {
 	row := p.db.QueryRow(`SELECT * FROM users WHERE email=$1`, email)
 
-	if row == nil {
-		return nil, errors.New("no such user")
-	}
-
 	result := &domain.User{}
 
 	err := row.Scan(
@@ -75,10 +66,6 @@ func (p PqRepository) GetUserByEmail(email string) (*domain.User, error) {
 
 func (p PqRepository) GetUserById(id string) (*domain.User, error) {
 	row := p.db.QueryRow(`SELECT * FROM users WHERE id=$1`, id)
-
-	if row == nil {
-		return nil, errors.New("no such user")
-	}
 
 	result := &domain.User{}
 
