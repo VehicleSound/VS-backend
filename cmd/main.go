@@ -38,7 +38,7 @@ func main() {
 	authS := usecase.NewAuthUseCase(repo)
 	tagS := usecase.NewTagUseCase(repo)
 	soundS := usecase.NewSoundUseCase(repo)
-	fileS := usecase.NewFileUseCase(repo)
+	fileS := usecase.NewFileUseCase(repo, cfg.MaxSoundSize)
 	searchS := usecase.NewSearchUseCase(repo)
 
 	authC := controller.NewAuthController(authS, cfg.Secret)

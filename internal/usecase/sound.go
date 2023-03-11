@@ -48,6 +48,9 @@ func (u *SoundUseCase) CreateSound(ctx UserContext, s *domain.Sound, tid []strin
 	}
 
 	// Create the sound.
+	if s.VehicleId == "" {
+		s.VehicleId = "default"
+	}
 	s.Id = uuid.NewString()
 	err := u.r.CreateSound(s)
 	if err != nil {

@@ -141,13 +141,94 @@ func (p PqRepository) GetSoundsNameLike(name string) ([]*domain.Sound, error) {
 }
 
 func (p PqRepository) GetSoundsByTagId(tagId string) ([]*domain.Sound, error) {
-	//TODO implement me
-	panic("implement me")
+	rows, err := p.db.Query(
+		`SELECT s.id, 
+       				  s.name, 
+       				  s.description, 
+       				  s.vehicle_id, 
+       				  s.author_id, 
+       				  s.picture_file_id, 
+       				  s.sound_file_id, 
+       				  u.login, 
+       				  v.name 
+				FROM sound_tags st 
+    			JOIN sounds s on s.id = st.sound_id 
+				JOIN vehicles v on v.id = s.vehicle_id
+				JOIN users u on u.id = s.author_id
+                WHERE tag_id=$1`, tagId)
+	if err != nil {
+		return nil, err
+	}
+
+	sounds := make([]*domain.Sound, 0)
+
+	for rows.Next() {
+		s := &domain.Sound{}
+		if err := rows.Scan(
+			&s.Id,
+			&s.Name,
+			&s.Description,
+			&s.VehicleId,
+			&s.AuthorId,
+			&s.PictureFileId,
+			&s.SoundFileId,
+			&s.AuthorLogin,
+			&s.VehicleName,
+		); err != nil {
+			return nil, err
+		}
+		sounds = append(sounds, s)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return sounds, nil
 }
 
 func (p PqRepository) GetSoundsByVehicleId(vehicleId string) ([]*domain.Sound, error) {
-	//TODO implement me
-	panic("implement me")
+	rows, err := p.db.Query(
+		`SELECT s.id, 
+       				  s.name, 
+       				  s.description, 
+       				  s.vehicle_id, 
+       				  s.author_id, 
+       				  s.picture_file_id, 
+       				  s.sound_file_id, 
+       				  u.login, 
+       				  v.name FROM sounds s
+         JOIN vehicles v on v.id = s.vehicle_id
+         JOIN users u on u.id = s.author_id
+         WHERE vehicle_id=$1`, vehicleId)
+
+	if err != nil {
+		return nil, err
+	}
+
+	sounds := make([]*domain.Sound, 0)
+
+	for rows.Next() {
+		s := &domain.Sound{}
+		if err := rows.Scan(
+			&s.Id,
+			&s.Name,
+			&s.Description,
+			&s.VehicleId,
+			&s.AuthorId,
+			&s.PictureFileId,
+			&s.SoundFileId,
+			&s.AuthorLogin,
+			&s.VehicleName,
+		); err != nil {
+			return nil, err
+		}
+		sounds = append(sounds, s)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return sounds, nil
 }
 
 func (p PqRepository) getTagsMap() (map[string][]*domain.Tag, error) {

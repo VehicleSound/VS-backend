@@ -4,5 +4,7 @@
   "db_name": "soundp",
   "db_user": "timickb",
   "db_password": "",
-  "db_ssl_mode": "disable"
+  "db_ssl_mode": "disable",
+  "max_sound_size": 5242880,
+  "max_picture_size": 5242880
 }

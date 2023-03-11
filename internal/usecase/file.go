@@ -13,11 +13,12 @@ import (
 )
 
 type FileUseCase struct {
-	r Repository
+	r           Repository
+	maxFileSize int
 }
 
-func NewFileUseCase(r Repository) *FileUseCase {
-	return &FileUseCase{r: r}
+func NewFileUseCase(r Repository, maxFileSize int) *FileUseCase {
+	return &FileUseCase{r: r, maxFileSize: maxFileSize}
 }
 
 func (u *FileUseCase) UploadImage(savePath string, fh *multipart.FileHeader) (string, error) {
@@ -81,6 +82,10 @@ func (u *FileUseCase) uploadFile(file *multipart.File, path, ext string) (string
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, *file); err != nil {
 		return "", err
+	}
+
+	if len(buf.Bytes()) > u.maxFileSize {
+		return "", errors.New("file too large")
 	}
 
 	fileId := uuid.NewString()
