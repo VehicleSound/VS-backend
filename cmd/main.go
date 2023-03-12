@@ -21,10 +21,11 @@ func main() {
 	}
 
 	connStr := fmt.Sprintf(
-		"user=%s dbname=%s sslmode=%s password=%s",
+		"user=%s dbname=%s sslmode=%s port=%d password=%s",
 		cfg.DbUser,
 		cfg.DbName,
 		cfg.DbSslMode,
+		cfg.DbPort,
 		cfg.DbPassword)
 
 	db, err := sql.Open("postgres", connStr)

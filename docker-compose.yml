@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15.0-alpine
+    command: postgres -c 'max_connections=5000'
+    restart: on-failure
+    volumes:
+      - ./.postgres_data/:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: "creeper"
+      POSTGRES_USER: "soundp"
+      POSTGRES_DB: "soundp"
+
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  service:
+    build: .
+    tty: true
+    ports:
+      - 8080:8080
+    restart: "no"
+    depends_on:
+      - db
+
