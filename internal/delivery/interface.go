@@ -15,6 +15,7 @@ type UserController interface {
 	ChangePassword(req *dto.ChangePasswordRequest) error
 	GetUser(req *dto.GetUserRequest) (*dto.GetUserResponse, error)
 	GetUserById(id string) (*dto.GetUserResponse, error)
+	AddToFav(req *dto.AddToFavRequest) error
 }
 type TagController interface {
 	CreateTag(req *dto.CreateTagRequest) (*dto.CreateTagResponse, error)

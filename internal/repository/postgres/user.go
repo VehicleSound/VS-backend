@@ -88,6 +88,16 @@ func (p PqRepository) EditUser(id string, payload *repository.UserEditPayload) (
 	panic("implement me")
 }
 
+func (p PqRepository) AddFavourite(userId, soundId string) error {
+	_, err := p.db.Exec(`INSERT INTO favourites (user_id, sound_id) VALUES ($1, $2)`, userId, soundId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewPqRepository(db *sql.DB) *PqRepository {
 	return &PqRepository{db: db}
 }

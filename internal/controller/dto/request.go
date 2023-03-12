@@ -57,3 +57,8 @@ type SearchRequest struct {
 	TagIds     []string `json:"tag_ids"`
 	VehicleIds []string `json:"vehicle_ids"`
 }
+
+type AddToFavRequest struct {
+	SoundId string `json:"sound_id,omitempty"`
+	UserId  string `json:"user_id,omitempty"`
+}

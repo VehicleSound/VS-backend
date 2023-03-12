@@ -6,6 +6,15 @@ import (
 )
 
 func mapSound(s *domain.Sound) *dto.SoundResponse {
+	tags := make([]*dto.TagResponse, len(s.Tags))
+
+	for i, t := range s.Tags {
+		tags[i] = &dto.TagResponse{
+			Id:    t.Id,
+			Title: t.Title,
+		}
+	}
+
 	return &dto.SoundResponse{
 		Id:             s.Id,
 		Name:           s.Name,
@@ -16,5 +25,6 @@ func mapSound(s *domain.Sound) *dto.SoundResponse {
 		VehicleId:      s.VehicleId,
 		AuthorLogin:    s.AuthorLogin,
 		VehicleName:    s.VehicleName,
+		Tags:           tags,
 	}
 }

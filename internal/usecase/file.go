@@ -100,11 +100,7 @@ func (u *FileUseCase) uploadFile(file *multipart.File, path, ext string) (string
 
 	path = filepath.Join(path, fileId+ext)
 
-	test, err := imgconv.Decode(buf)
-	fmt.Println(test)
-	fmt.Println(err)
-
-	err = os.WriteFile(path, buf.Bytes(), 0644)
+	err := os.WriteFile(path, buf.Bytes(), 0644)
 	if err != nil {
 		return "", err
 	}

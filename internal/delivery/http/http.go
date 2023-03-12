@@ -57,9 +57,10 @@ func (s *Server) authMiddleware(ctx *gin.Context) {
 	if strings.HasSuffix(ctx.Request.RequestURI, "signin") ||
 		strings.HasSuffix(ctx.Request.RequestURI, "register") ||
 		strings.HasPrefix(ctx.Request.RequestURI, "/assets") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/random") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/search") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/sounds") {
+		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/random") ||
+		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/search") ||
+		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/sounds") ||
+		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/tags") {
 		ctx.Next()
 		return
 	}
@@ -112,7 +113,7 @@ func (s *Server) configureRouter() {
 	s.router.GET("/api/v1/users/:id", s.getUserById)
 	s.router.POST("/api/v1/users/search", s.getUserByCredentials)
 
-	s.router.POST("/api/v1/tags", s.createTag)
+	s.router.POST("/api/v1/create_tag", s.createTag)
 	s.router.GET("/api/v1/tags", s.getAllTags)
 	s.router.GET("/api/v1/tags/:id", s.getTagById)
 
@@ -125,4 +126,6 @@ func (s *Server) configureRouter() {
 
 	s.router.POST("/api/v1/upload_image", s.uploadImage)
 	s.router.POST("/api/v1/upload_sound", s.uploadSound)
+
+	s.router.POST("/api/v1/add_favourite", s.addFavourite)
 }

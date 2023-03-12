@@ -9,4 +9,5 @@ type Config struct {
 	DbSslMode      string `json:"db_ssl_mode,omitempty"`
 	MaxSoundSize   int    `json:"max_sound_size,omitempty"`
 	MaxPictureSize int    `json:"max_picture_size,omitempty"`
+	DbPort         int    `json:"db_port,omitempty"`
 }

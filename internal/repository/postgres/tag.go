@@ -89,7 +89,7 @@ func (p PqRepository) GetTagsForSound(soundId string) ([]*domain.Tag, error) {
 		return nil, err
 	}
 
-	var tags []*domain.Tag
+	tags := make([]*domain.Tag, 0)
 	for tRows.Next() {
 		tag := &domain.Tag{}
 

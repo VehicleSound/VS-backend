@@ -107,6 +107,14 @@ func (u *UserUseCase) ChangeEmail(id, nEmail string) error {
 	return nil
 }
 
+func (u *UserUseCase) AddToFav(userId, soundId string) error {
+	if err := u.r.AddFavourite(userId, soundId); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (u *UserUseCase) Deactivate(id string) error {
 	_, err := u.r.GetUserById(id)
 	if err != nil {

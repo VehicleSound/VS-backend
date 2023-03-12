@@ -277,3 +277,25 @@ func (s *Server) me(ctx *gin.Context) {
 
 	ctx.IndentedJSON(200, resp.(*dto.TokenResponse))
 }
+
+func (s *Server) addFavourite(ctx *gin.Context) {
+	req := &dto.AddToFavRequest{}
+
+	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: "Invalid body",
+		})
+	}
+
+	err := s.user.AddToFav(req)
+	if err != nil {
+		ctx.IndentedJSON(400, &ErrorResponse{
+			Code:    400,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(200, nil)
+}

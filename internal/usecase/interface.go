@@ -30,6 +30,8 @@ type Repository interface {
 
 	CreateFile(id, ext string) error
 	GetFileExtById(id string) (string, error)
+
+	AddFavourite(userId, soundId string) error
 }
 type UserContext interface {
 	User() *domain.User

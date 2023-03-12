@@ -13,6 +13,7 @@ type UserUseCase interface {
 	ChangeLogin(id, nLogin string) error
 	ChangeEmail(id, nEmail string) error
 	Deactivate(id string) error
+	AddToFav(userId, soundId string) error
 }
 
 type UserController struct {
@@ -85,6 +86,14 @@ func (c *UserController) GetUser(req *dto.GetUserRequest) (*dto.GetUserResponse,
 	}
 
 	return nil, fmt.Errorf("err get user: wrong credentials")
+}
+
+func (c *UserController) AddToFav(req *dto.AddToFavRequest) error {
+	if err := c.u.AddToFav(req.UserId, req.SoundId); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (c *UserController) mapUser(user *domain.User) *dto.GetUserResponse {
