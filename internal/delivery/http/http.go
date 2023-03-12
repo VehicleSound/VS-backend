@@ -57,9 +57,9 @@ func (s *Server) authMiddleware(ctx *gin.Context) {
 	if strings.HasSuffix(ctx.Request.RequestURI, "signin") ||
 		strings.HasSuffix(ctx.Request.RequestURI, "register") ||
 		strings.HasPrefix(ctx.Request.RequestURI, "/assets") ||
-		strings.HasSuffix(ctx.Request.RequestURI, "/random") ||
-		strings.HasSuffix(ctx.Request.RequestURI, "/search") ||
-		strings.HasSuffix(ctx.Request.RequestURI, "/sounds") {
+		strings.HasPrefix(ctx.Request.RequestURI, "/random") ||
+		strings.HasPrefix(ctx.Request.RequestURI, "/search") ||
+		strings.HasPrefix(ctx.Request.RequestURI, "/sounds") {
 		ctx.Next()
 		return
 	}
@@ -118,7 +118,7 @@ func (s *Server) configureRouter() {
 
 	s.router.GET("/api/v1/sounds", s.getAllSounds)
 	s.router.GET("/api/v1/sounds/:id", s.getSoundById)
-	s.router.POST("/api/v1/sounds", s.createSound)
+	s.router.POST("/api/v1/create_sound", s.createSound)
 	s.router.GET("/api/v1/random", s.randomSounds)
 
 	s.router.POST("/api/v1/search", s.searchSounds)
