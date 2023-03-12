@@ -264,3 +264,16 @@ func (s *Server) randomSounds(ctx *gin.Context) {
 
 	ctx.IndentedJSON(200, resp)
 }
+
+func (s *Server) me(ctx *gin.Context) {
+	resp, ok := ctx.Get("user")
+	if !ok {
+		ctx.IndentedJSON(401, &ErrorResponse{
+			Code:    401,
+			Message: "Unauthorized",
+		})
+		return
+	}
+
+	ctx.IndentedJSON(200, resp.(*dto.TokenResponse))
+}

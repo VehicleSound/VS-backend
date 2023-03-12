@@ -18,8 +18,8 @@ func NewSearchController(u SearchUseCase) *SearchController {
 	return &SearchController{u: u}
 }
 
-func (c *SearchController) Search(req *dto.SearchRequest) ([]*domain.Sound, error) {
-	res, err := c.u.Search(&usecase.SearchRequest{
+func (c *SearchController) Search(req *dto.SearchRequest) ([]*dto.SoundResponse, error) {
+	sounds, err := c.u.Search(&usecase.SearchRequest{
 		Name:       req.Name,
 		TagIds:     req.TagIds,
 		VehicleIds: req.VehicleIds,
@@ -28,5 +28,10 @@ func (c *SearchController) Search(req *dto.SearchRequest) ([]*domain.Sound, erro
 		return nil, err
 	}
 
-	return res, nil
+	resp := make([]*dto.SoundResponse, len(sounds))
+	for i, s := range sounds {
+		resp[i] = mapSound(s)
+	}
+
+	return resp, nil
 }

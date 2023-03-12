@@ -40,3 +40,15 @@ type TokenResponse struct {
 	Confirmed bool   `json:"confirmed,omitempty"`
 	Active    bool   `json:"active,omitempty"`
 }
+
+type SoundResponse struct {
+	Id             string `json:"id,omitempty"`
+	Name           string `json:"name,omitempty"`
+	Description    string `json:"description,omitempty"`
+	PictureFileUrl string `json:"picture_file_url,omitempty"`
+	SoundFileUrl   string `json:"sound_file_url,omitempty"`
+	AuthorId       string `json:"author_id,omitempty"`
+	VehicleId      string `json:"vehicle_id"`
+	AuthorLogin    string `json:"author_login,omitempty"`
+	VehicleName    string `json:"vehicle_name"`
+}

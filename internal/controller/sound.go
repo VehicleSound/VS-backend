@@ -21,20 +21,25 @@ func NewSoundController(u SoundUseCase) *SoundController {
 	return &SoundController{u: u}
 }
 
-func (c *SoundController) GetAllSounds() ([]*domain.Sound, error) {
+func (c *SoundController) GetAllSounds() ([]*dto.SoundResponse, error) {
 	sounds, err := c.u.GetAllSounds()
 	if err != nil {
 		return nil, err
 	}
-	return sounds, nil
+
+	resp := make([]*dto.SoundResponse, len(sounds))
+	for i, s := range sounds {
+		resp[i] = mapSound(s)
+	}
+	return resp, nil
 }
 
-func (c *SoundController) GetSoundById(id string) (*domain.Sound, error) {
+func (c *SoundController) GetSoundById(id string) (*dto.SoundResponse, error) {
 	sound, err := c.u.GetSoundById(id)
 	if err != nil {
 		return nil, err
 	}
-	return sound, nil
+	return mapSound(sound), nil
 }
 
 func (c *SoundController) CreateSound(t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error) {
@@ -55,11 +60,15 @@ func (c *SoundController) CreateSound(t *dto.TokenResponse, req *dto.CreateSound
 	return &dto.CreateSoundResponse{SoundId: id}, nil
 }
 
-func (c *SoundController) GetRandomSounds(limit int) ([]*domain.Sound, error) {
+func (c *SoundController) GetRandomSounds(limit int) ([]*dto.SoundResponse, error) {
 	sounds, err := c.u.GetRandomSounds(limit)
 	if err != nil {
 		return nil, err
 	}
 
-	return sounds, nil
+	resp := make([]*dto.SoundResponse, len(sounds))
+	for i, s := range sounds {
+		resp[i] = mapSound(s)
+	}
+	return resp, nil
 }

@@ -56,7 +56,10 @@ func (s *Server) Run() error {
 func (s *Server) authMiddleware(ctx *gin.Context) {
 	if strings.HasSuffix(ctx.Request.RequestURI, "signin") ||
 		strings.HasSuffix(ctx.Request.RequestURI, "register") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/assets") {
+		strings.HasPrefix(ctx.Request.RequestURI, "/assets") ||
+		strings.HasSuffix(ctx.Request.RequestURI, "/random") ||
+		strings.HasSuffix(ctx.Request.RequestURI, "/search") ||
+		strings.HasSuffix(ctx.Request.RequestURI, "/sounds") {
 		ctx.Next()
 		return
 	}
@@ -104,6 +107,7 @@ func (s *Server) configureRouter() {
 
 	s.router.POST("/api/v1/register", s.register)
 	s.router.POST("/api/v1/signin", s.login)
+	s.router.GET("/api/v1/me", s.me)
 
 	s.router.GET("/api/v1/users/:id", s.getUserById)
 	s.router.POST("/api/v1/users/search", s.getUserByCredentials)

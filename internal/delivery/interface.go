@@ -2,7 +2,6 @@ package delivery
 
 import (
 	"github.com/timickb/transport-sound/internal/controller/dto"
-	"github.com/timickb/transport-sound/internal/domain"
 )
 
 type AuthController interface {
@@ -28,11 +27,11 @@ type FileController interface {
 	UploadSound(req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
 }
 type SearchController interface {
-	Search(req *dto.SearchRequest) ([]*domain.Sound, error)
+	Search(req *dto.SearchRequest) ([]*dto.SoundResponse, error)
 }
 type SoundController interface {
-	GetAllSounds() ([]*domain.Sound, error)
-	GetSoundById(id string) (*domain.Sound, error)
+	GetAllSounds() ([]*dto.SoundResponse, error)
+	GetSoundById(id string) (*dto.SoundResponse, error)
 	CreateSound(t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error)
-	GetRandomSounds(limit int) ([]*domain.Sound, error)
+	GetRandomSounds(limit int) ([]*dto.SoundResponse, error)
 }

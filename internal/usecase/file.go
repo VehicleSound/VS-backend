@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
+	"github.com/sunshineplan/imgconv"
+	"github.com/timickb/transport-sound/internal/usecase/converter"
 	"io"
 	"mime/multipart"
 	"os"
@@ -25,11 +27,7 @@ func (u *FileUseCase) UploadImage(savePath string, fh *multipart.FileHeader) (st
 	ext := strings.ToLower(filepath.Ext(fh.Filename))
 
 	if !u.checkImageExt(ext) {
-		return "", errors.New("invalid image extension")
-	}
-
-	if !u.checkImageMime(fh.Header.Get("Content-Type")) {
-		return "", errors.New("invalid mime type")
+		return "", errors.New("invalid converter extension")
 	}
 
 	file, err := fh.Open()
@@ -38,8 +36,22 @@ func (u *FileUseCase) UploadImage(savePath string, fh *multipart.FileHeader) (st
 	}
 	defer file.Close()
 
-	id, err := u.uploadFile(&file, savePath, ext)
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, file); err != nil {
+		return "", err
+	}
+
+	if len(buf.Bytes()) > u.maxFileSize {
+		return "", errors.New("file too large")
+	}
+
+	image, err := imgconv.Decode(buf)
 	if err != nil {
+		return "", fmt.Errorf("err upload image: %w", err)
+	}
+
+	id := uuid.NewString()
+	if err := converter.HandleAndSaveImage(savePath, id, image); err != nil {
 		return "", fmt.Errorf("err upload image: %w", err)
 	}
 
@@ -54,10 +66,6 @@ func (u *FileUseCase) UploadSound(savePath string, fh *multipart.FileHeader) (st
 	ext := strings.ToLower(filepath.Ext(fh.Filename))
 	if !u.checkSoundExt(ext) {
 		return "", errors.New("invalid sound extension")
-	}
-
-	if !u.checkSoundMime(fh.Header.Get("Content-Type")) {
-		return "", errors.New("invalid mime type")
 	}
 
 	file, err := fh.Open()
@@ -92,7 +100,11 @@ func (u *FileUseCase) uploadFile(file *multipart.File, path, ext string) (string
 
 	path = filepath.Join(path, fileId+ext)
 
-	err := os.WriteFile(path, buf.Bytes(), 0644)
+	test, err := imgconv.Decode(buf)
+	fmt.Println(test)
+	fmt.Println(err)
+
+	err = os.WriteFile(path, buf.Bytes(), 0644)
 	if err != nil {
 		return "", err
 	}
@@ -126,9 +138,9 @@ func (u *FileUseCase) checkSoundExt(ext string) bool {
 
 func (u *FileUseCase) checkImageMime(mime string) bool {
 	switch mime {
-	case "image/png":
+	case "converter/png":
 		return true
-	case "image/jpeg":
+	case "converter/jpeg":
 		return true
 	}
 
