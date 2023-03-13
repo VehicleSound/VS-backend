@@ -90,3 +90,6 @@ create table favourites
     constraint favourites_pk
         primary key (user_id, sound_id)
 );
+
+insert into vehicle_types (id, title) values('1', 'any');
+insert into vehicles (id, name, type_id) values ('default', 'default', '1');
