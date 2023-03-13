@@ -11,6 +11,9 @@ FROM alpine:latest
 
 COPY --from=builder /usr/local/go/src/app /
 COPY --from=builder /usr/local/go/src/config.json /
+RUN mkdir /static
+RUN mkdir /static/images
+RUN mkdir /static/sounds
 
 EXPOSE 8080
 CMD ["/app"]

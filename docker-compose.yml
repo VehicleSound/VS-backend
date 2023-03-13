@@ -10,18 +10,29 @@ services:
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_PASSWORD: "creeper"
+      POSTGRES_PASSWORD: "melon"
       POSTGRES_USER: "soundp"
       POSTGRES_DB: "soundp"
 
       POSTGRES_HOST_AUTH_METHOD: trust
 
+  migrate:
+    image: migrate/migrate
+    entrypoint: "migrate -path /tmp/migrations -database postgresql://soundp:melon@db/soundp?sslmode=disable"
+    command: up
+    restart: on-failure
+    depends_on:
+      - db
+    volumes:
+      - ./migrations:/tmp/migrations
+
   service:
     build: .
     tty: true
     ports:
-      - 8080:8080
+      - '8080:8080'
     restart: "no"
     depends_on:
       - db
+      - migrate
 
