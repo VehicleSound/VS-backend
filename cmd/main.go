@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "github.com/lib/pq"
+	log2 "github.com/qiniu/x/log"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/controller"
 	"github.com/timickb/transport-sound/internal/delivery/http"
@@ -21,12 +22,20 @@ func main() {
 	}
 
 	connStr := fmt.Sprintf(
-		"user=%s dbname=%s sslmode=%s port=%d password=%s",
+		"host=%s user=%s dbname=%s sslmode=%s port=%d password=%s",
+		cfg.DbHost,
 		cfg.DbUser,
 		cfg.DbName,
 		cfg.DbSslMode,
 		cfg.DbPort,
 		cfg.DbPassword)
+
+	log2.Info(fmt.Sprintf("Connection string: postgresql://%s:%s@%s/%s?sslmode=%s",
+		cfg.DbUser,
+		cfg.DbPassword,
+		cfg.DbHost,
+		cfg.DbName,
+		cfg.DbSslMode))
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
