@@ -1,9 +1,10 @@
 {
   "port": 8080,
   "secret": "secret",
+  "db_host": "db",
   "db_name": "soundp",
   "db_user": "soundp",
-  "db_password": "creeper",
+  "db_password": "melon",
   "db_ssl_mode": "disable",
   "db_port": 5432,
   "max_sound_size": 25242880,
