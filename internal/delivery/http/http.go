@@ -10,7 +10,7 @@ import (
 
 type Server struct {
 	router *gin.Engine
-	config *config.Config
+	config *config.AppConfig
 
 	auth   delivery.AuthController
 	user   delivery.UserController
@@ -21,7 +21,7 @@ type Server struct {
 }
 
 func NewHttpServer(
-	config *config.Config,
+	config *config.AppConfig,
 	auth delivery.AuthController,
 	user delivery.UserController,
 	tag delivery.TagController,
@@ -45,7 +45,7 @@ func NewHttpServer(
 }
 
 func (s *Server) Run() error {
-	err := s.router.Run(fmt.Sprintf(":%d", s.config.Port))
+	err := s.router.Run(fmt.Sprintf(":%d", s.config.AppPort))
 	if err != nil {
 		return err
 	}

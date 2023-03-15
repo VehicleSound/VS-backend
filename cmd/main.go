@@ -1,82 +1,62 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/json"
-	"fmt"
 	_ "github.com/lib/pq"
-	log2 "github.com/qiniu/x/log"
 	"github.com/timickb/transport-sound/internal/config"
-	"github.com/timickb/transport-sound/internal/controller"
-	"github.com/timickb/transport-sound/internal/delivery/http"
-	"github.com/timickb/transport-sound/internal/repository/postgres"
-	"github.com/timickb/transport-sound/internal/usecase"
-	"io/ioutil"
+	"github.com/timickb/transport-sound/internal/factory"
 	"log"
+	"os"
+	"strconv"
 )
 
 func main() {
-	cfg, err := ReadConfig()
-	if err != nil {
+	if err := mainNoExit(); err != nil {
 		log.Fatal(err)
 	}
-
-	connStr := fmt.Sprintf(
-		"host=%s user=%s dbname=%s sslmode=%s port=%d password=%s",
-		cfg.DbHost,
-		cfg.DbUser,
-		cfg.DbName,
-		cfg.DbSslMode,
-		cfg.DbPort,
-		cfg.DbPassword)
-
-	log2.Info(fmt.Sprintf("Connection string: postgresql://%s:%s@%s/%s?sslmode=%s",
-		cfg.DbUser,
-		cfg.DbPassword,
-		cfg.DbHost,
-		cfg.DbName,
-		cfg.DbSslMode))
-
-	db, err := sql.Open("postgres", connStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	repo := postgres.NewPqRepository(db)
-
-	userS := usecase.NewUserUseCase(repo)
-	authS := usecase.NewAuthUseCase(repo)
-	tagS := usecase.NewTagUseCase(repo)
-	soundS := usecase.NewSoundUseCase(repo)
-	fileS := usecase.NewFileUseCase(repo, cfg.MaxSoundSize)
-	searchS := usecase.NewSearchUseCase(repo)
-
-	authC := controller.NewAuthController(authS, cfg.Secret)
-	userC := controller.NewUserController(userS)
-	tagC := controller.NewTagController(tagS)
-	soundC := controller.NewSoundController(soundS)
-	fileC := controller.NewFileController(fileS)
-	searchC := controller.NewSearchController(searchS)
-
-	s := http.NewHttpServer(cfg, authC, userC, tagC, soundC, fileC, searchC)
-
-	if err := s.Run(); err != nil {
-		log.Fatal(err)
-	}
-
 }
 
-func ReadConfig() (*config.Config, error) {
-	raw, err := ioutil.ReadFile("config.json")
+func mainNoExit() error {
+	cfg := config.NewDefault()
+	parseConfigFromEnvironment(cfg)
+
+	srv, err := factory.InitializeHttpServer(cfg)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	var cfg *config.Config
-
-	if json.Unmarshal(raw, &cfg) != nil {
-		return nil, err
+	if err := srv.Run(); err != nil {
+		return err
 	}
 
-	return cfg, nil
+	return nil
+}
+
+func parseConfigFromEnvironment(cfg *config.AppConfig) {
+	if os.Getenv("DB_HOST") != "" {
+		cfg.DbHost = os.Getenv("DB_HOST")
+	}
+	if os.Getenv("DB_USER") != "" {
+		cfg.DbUser = os.Getenv("DB_USER")
+	}
+	if os.Getenv("DB_NAME") != "" {
+		cfg.DbName = os.Getenv("DB_NAME")
+	}
+	if os.Getenv("DB_PASSWORD") != "" {
+		cfg.DbPassword = os.Getenv("DB_PASSWORD")
+	}
+	if os.Getenv("JWT_SECRET") != "" {
+		cfg.JwtSecret = os.Getenv("JWT_SECRET")
+	}
+	if os.Getenv("DB_PORT") != "" {
+		cfg.DbPort, _ = strconv.Atoi(os.Getenv("DB_PORT"))
+	}
+	if os.Getenv("APP_PORT") != "" {
+		cfg.AppPort, _ = strconv.Atoi(os.Getenv("APP_PORT"))
+	}
+	if os.Getenv("MAX_PICTURE_SIZE") != "" {
+		cfg.MaxPictureSize, _ = strconv.Atoi(os.Getenv("MAX_PICTURE_SIZE"))
+	}
+	if os.Getenv("MAX_SOUND_SIZE") != "" {
+		cfg.MaxSoundSize, _ = strconv.Atoi(os.Getenv("MAX_SOUND_SIZE"))
+	}
 }

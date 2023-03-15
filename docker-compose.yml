@@ -8,17 +8,16 @@ services:
     volumes:
       - ./.postgres_data/:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - "5435:${DB_PORT}"
     environment:
-      POSTGRES_PASSWORD: "melon"
-      POSTGRES_USER: "soundp"
-      POSTGRES_DB: "soundp"
-
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_HOST_AUTH_METHOD: trust
 
   migrate:
     image: migrate/migrate
-    entrypoint: "migrate -path /tmp/migrations -database postgresql://soundp:melon@db/soundp?sslmode=disable"
+    entrypoint: "migrate -path /tmp/migrations -database postgresql://${DB_USER}:${DB_PASSWORD}@db/${DB_NAME}?sslmode=${DB_SSL_MODE}"
     command: up
     restart: on-failure
     depends_on:
@@ -30,9 +29,19 @@ services:
     build: .
     tty: true
     ports:
-      - '8080:8080'
+      - "${APP_PORT}:${APP_PORT}"
     restart: "no"
     depends_on:
       - db
       - migrate
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PORT=${DB_PORT}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - MAX_SOUND_SIZE=${MAX_SOUND_SIZE}
+      - MAX_PICTURE_SIZE=${MAX_PICTURE_SIZE}
+      - APP_PORT=${APP_PORT}
 
