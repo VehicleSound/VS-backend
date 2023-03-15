@@ -46,6 +46,7 @@ func NewHttpServer(
 
 func (s *Server) Run() error {
 	err := s.router.Run(fmt.Sprintf(":%d", s.config.AppPort))
+
 	if err != nil {
 		return err
 	}

@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/interfaces"
 	"time"
 )
 
 type AuthUseCase struct {
 	repo Repository
+	log  interfaces.Logger
 }
 
-func NewAuthUseCase(r Repository) *AuthUseCase {
-	return &AuthUseCase{repo: r}
+func NewAuthUseCase(r Repository, log interfaces.Logger) *AuthUseCase {
+	return &AuthUseCase{repo: r, log: log}
 }
 
 func (u *AuthUseCase) SignIn(email, password, secret string) (string, error) {

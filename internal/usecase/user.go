@@ -5,14 +5,16 @@ import (
 	"errors"
 	"fmt"
 	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/interfaces"
 	"github.com/timickb/transport-sound/internal/repository"
 )
 
 type UserUseCase struct {
-	r Repository
+	r   Repository
+	log interfaces.Logger
 }
 
-func NewUserUseCase(r Repository) *UserUseCase {
+func NewUserUseCase(r Repository, log interfaces.Logger) *UserUseCase {
 	return &UserUseCase{r: r}
 }
 

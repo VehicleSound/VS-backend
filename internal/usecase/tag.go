@@ -4,13 +4,15 @@ import (
 	"errors"
 	"fmt"
 	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/interfaces"
 )
 
 type TagUseCase struct {
 	repo Repository
+	log  interfaces.Logger
 }
 
-func NewTagUseCase(repo Repository) *TagUseCase {
+func NewTagUseCase(repo Repository, log interfaces.Logger) *TagUseCase {
 	return &TagUseCase{repo: repo}
 }
 

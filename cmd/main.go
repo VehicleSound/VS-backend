@@ -36,7 +36,7 @@ func mainNoExit(logger interfaces.Logger) error {
 	logger.Info("Config parsed: ", cfg)
 	logger.Info("Initializing http server")
 
-	srv, err := factory.InitializeHttpServer(cfg)
+	srv, err := factory.InitializeHttpServer(cfg, logger)
 	if err != nil {
 		return err
 	}

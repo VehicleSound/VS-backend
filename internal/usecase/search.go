@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/interfaces"
 )
 
 type SearchRequest struct {
@@ -13,10 +14,11 @@ type SearchRequest struct {
 
 type SearchUseCase struct {
 	repo Repository
+	log  interfaces.Logger
 }
 
-func NewSearchUseCase(repo Repository) *SearchUseCase {
-	return &SearchUseCase{repo: repo}
+func NewSearchUseCase(repo Repository, log interfaces.Logger) *SearchUseCase {
+	return &SearchUseCase{repo: repo, log: log}
 }
 
 func (u *SearchUseCase) Search(req *SearchRequest) ([]*domain.Sound, error) {

@@ -4,16 +4,18 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/interfaces"
 	"math/rand"
 	"time"
 )
 
 type SoundUseCase struct {
-	r Repository
+	r   Repository
+	log interfaces.Logger
 }
 
-func NewSoundUseCase(r Repository) *SoundUseCase {
-	return &SoundUseCase{r: r}
+func NewSoundUseCase(r Repository, log interfaces.Logger) *SoundUseCase {
+	return &SoundUseCase{r: r, log: log}
 }
 
 func (u *SoundUseCase) GetSoundById(id string) (*domain.Sound, error) {

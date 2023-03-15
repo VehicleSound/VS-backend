@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/sunshineplan/imgconv"
+	"github.com/timickb/transport-sound/internal/interfaces"
 	"github.com/timickb/transport-sound/internal/usecase/converter"
 	"io"
 	"mime/multipart"
@@ -16,11 +17,12 @@ import (
 
 type FileUseCase struct {
 	r           Repository
+	log         interfaces.Logger
 	maxFileSize int
 }
 
-func NewFileUseCase(r Repository, maxFileSize int) *FileUseCase {
-	return &FileUseCase{r: r, maxFileSize: maxFileSize}
+func NewFileUseCase(r Repository, log interfaces.Logger, maxFileSize int) *FileUseCase {
+	return &FileUseCase{r: r, log: log, maxFileSize: maxFileSize}
 }
 
 func (u *FileUseCase) UploadImage(savePath string, fh *multipart.FileHeader) (string, error) {
