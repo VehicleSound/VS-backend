@@ -1,29 +1,47 @@
 package main
 
 import (
+	"errors"
+	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/factory"
-	"log"
+	"github.com/timickb/transport-sound/internal/interfaces"
 	"os"
 	"strconv"
 )
 
 func main() {
-	if err := mainNoExit(); err != nil {
-		log.Fatal(err)
+	logger := logrus.New()
+	logger.Info("Service is starting")
+
+	if err := mainNoExit(logger); err != nil {
+		logger.Fatal(err)
 	}
 }
 
-func mainNoExit() error {
+func mainNoExit(logger interfaces.Logger) error {
 	cfg := config.NewDefault()
 	parseConfigFromEnvironment(cfg)
+
+	if cfg.ServerMode == "debug" {
+		gin.SetMode(gin.DebugMode)
+	} else if cfg.ServerMode == "release" {
+		gin.SetMode(gin.ReleaseMode)
+	} else {
+		return errors.New("invalid server mode: it can be only \"debug\" or \"release\"")
+	}
+
+	logger.Info("Config parsed: ", cfg)
+	logger.Info("Initializing http server")
 
 	srv, err := factory.InitializeHttpServer(cfg)
 	if err != nil {
 		return err
 	}
 
+	logger.Info("Starting http server")
 	if err := srv.Run(); err != nil {
 		return err
 	}
@@ -58,5 +76,8 @@ func parseConfigFromEnvironment(cfg *config.AppConfig) {
 	}
 	if os.Getenv("MAX_SOUND_SIZE") != "" {
 		cfg.MaxSoundSize, _ = strconv.Atoi(os.Getenv("MAX_SOUND_SIZE"))
+	}
+	if os.Getenv("SERVER_MODE") != "" {
+		cfg.ServerMode = os.Getenv("SERVER_MODE")
 	}
 }

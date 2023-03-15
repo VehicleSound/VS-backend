@@ -11,6 +11,7 @@ type AppConfig struct {
 	DbSslMode      string `json:"db_ssl_mode,omitempty"`
 	MaxSoundSize   int    `json:"max_sound_size,omitempty"`
 	MaxPictureSize int    `json:"max_picture_size,omitempty"`
+	ServerMode     string `json:"server_mode,omitempty"`
 }
 
 func NewDefault() *AppConfig {
@@ -25,5 +26,6 @@ func NewDefault() *AppConfig {
 		DbSslMode:      "disable",
 		MaxSoundSize:   25242880,
 		MaxPictureSize: 25242880,
+		ServerMode:     "debug",
 	}
 }
