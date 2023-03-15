@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/timickb/transport-sound/internal/controller/dto"
-	"github.com/timickb/transport-sound/internal/domain"
+	dto2 "github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
 
 type AuthUseCase interface {
@@ -19,22 +19,22 @@ func NewAuthController(u AuthUseCase, secret string) *AuthController {
 	return &AuthController{u: u}
 }
 
-func (c *AuthController) SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error) {
+func (c *AuthController) SignIn(req *dto2.AuthRequest) (*dto2.AuthResponse, error) {
 	token, err := c.u.SignIn(req.Email, req.Password, c.secret)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.AuthResponse{Token: token}, nil
+	return &dto2.AuthResponse{Token: token}, nil
 }
 
-func (c *AuthController) ValidateToken(token string) (*dto.TokenResponse, error) {
+func (c *AuthController) ValidateToken(token string) (*dto2.TokenResponse, error) {
 	user, err := c.u.ValidateToken(token, c.secret)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.TokenResponse{
+	return &dto2.TokenResponse{
 		Id:        user.Id,
 		Login:     user.Login,
 		Email:     user.Email,

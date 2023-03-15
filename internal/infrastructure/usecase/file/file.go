@@ -1,4 +1,4 @@
-package usecase
+package file
 
 import (
 	"bytes"
@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/sunshineplan/imgconv"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/converter"
 	"github.com/timickb/transport-sound/internal/interfaces"
-	"github.com/timickb/transport-sound/internal/usecase/converter"
 	"io"
 	"mime/multipart"
 	"os"
@@ -15,17 +16,17 @@ import (
 	"strings"
 )
 
-type FileUseCase struct {
-	r           Repository
+type UseCase struct {
+	r           usecase.Repository
 	log         interfaces.Logger
 	maxFileSize int
 }
 
-func NewFileUseCase(r Repository, log interfaces.Logger, maxFileSize int) *FileUseCase {
-	return &FileUseCase{r: r, log: log, maxFileSize: maxFileSize}
+func NewFileUseCase(r usecase.Repository, log interfaces.Logger, maxFileSize int) *UseCase {
+	return &UseCase{r: r, log: log, maxFileSize: maxFileSize}
 }
 
-func (u *FileUseCase) UploadImage(savePath string, fh *multipart.FileHeader) (string, error) {
+func (u *UseCase) UploadImage(savePath string, fh *multipart.FileHeader) (string, error) {
 	ext := strings.ToLower(filepath.Ext(fh.Filename))
 
 	if !u.checkImageExt(ext) {
@@ -64,7 +65,7 @@ func (u *FileUseCase) UploadImage(savePath string, fh *multipart.FileHeader) (st
 	return id, nil
 }
 
-func (u *FileUseCase) UploadSound(savePath string, fh *multipart.FileHeader) (string, error) {
+func (u *UseCase) UploadSound(savePath string, fh *multipart.FileHeader) (string, error) {
 	ext := strings.ToLower(filepath.Ext(fh.Filename))
 	if !u.checkSoundExt(ext) {
 		return "", errors.New("invalid sound extension")
@@ -88,7 +89,7 @@ func (u *FileUseCase) UploadSound(savePath string, fh *multipart.FileHeader) (st
 	return id, nil
 }
 
-func (u *FileUseCase) uploadFile(file *multipart.File, path, ext string) (string, error) {
+func (u *UseCase) uploadFile(file *multipart.File, path, ext string) (string, error) {
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, *file); err != nil {
 		return "", err
@@ -110,7 +111,7 @@ func (u *FileUseCase) uploadFile(file *multipart.File, path, ext string) (string
 	return fileId, nil
 }
 
-func (u *FileUseCase) checkImageExt(ext string) bool {
+func (u *UseCase) checkImageExt(ext string) bool {
 	switch ext {
 	case ".png":
 		return true
@@ -123,7 +124,7 @@ func (u *FileUseCase) checkImageExt(ext string) bool {
 	return false
 }
 
-func (u *FileUseCase) checkSoundExt(ext string) bool {
+func (u *UseCase) checkSoundExt(ext string) bool {
 	switch ext {
 	case ".mp3":
 		return true
@@ -134,7 +135,7 @@ func (u *FileUseCase) checkSoundExt(ext string) bool {
 	return false
 }
 
-func (u *FileUseCase) checkImageMime(mime string) bool {
+func (u *UseCase) checkImageMime(mime string) bool {
 	switch mime {
 	case "converter/png":
 		return true
@@ -145,7 +146,7 @@ func (u *FileUseCase) checkImageMime(mime string) bool {
 	return false
 }
 
-func (u *FileUseCase) checkSoundMime(mime string) bool {
+func (u *UseCase) checkSoundMime(mime string) bool {
 	switch mime {
 	case "audio/aac":
 		return true

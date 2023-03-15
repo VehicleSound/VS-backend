@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"errors"
-	"github.com/timickb/transport-sound/internal/domain"
+	domain2 "github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
 
 func (p PqRepository) AddTagToSound(soundId, tagId string) error {
@@ -15,7 +15,7 @@ func (p PqRepository) AddTagToSound(soundId, tagId string) error {
 	return nil
 }
 
-func (p PqRepository) CreateSound(sound *domain.Sound) error {
+func (p PqRepository) CreateSound(sound *domain2.Sound) error {
 	query := `INSERT INTO sounds
     		(id, name, description, author_id, vehicle_id, sound_file_id, picture_file_id) 
 			VALUES ($1, $2, $3, $4, $5, $6, $7)`
@@ -34,7 +34,7 @@ func (p PqRepository) CreateSound(sound *domain.Sound) error {
 	return nil
 }
 
-func (p PqRepository) GetSoundById(id string) (*domain.Sound, error) {
+func (p PqRepository) GetSoundById(id string) (*domain2.Sound, error) {
 	query := `SELECT s.id, s.name, s.description, s.author_id, s.vehicle_id, s.picture_file_id, s.sound_file_id, u.login, v.name 
 			FROM sounds s
 			JOIN users u on u.id = s.author_id
@@ -47,7 +47,7 @@ func (p PqRepository) GetSoundById(id string) (*domain.Sound, error) {
 		return nil, errors.New("sound not found")
 	}
 
-	sound := &domain.Sound{}
+	sound := &domain2.Sound{}
 
 	if err := row.Scan(
 		&sound.Id,
@@ -65,7 +65,7 @@ func (p PqRepository) GetSoundById(id string) (*domain.Sound, error) {
 	return sound, nil
 }
 
-func (p PqRepository) GetAllSounds() ([]*domain.Sound, error) {
+func (p PqRepository) GetAllSounds() ([]*domain2.Sound, error) {
 	sQuery := `SELECT s.id, s.name, s.description, s.author_id, s.vehicle_id, s.picture_file_id, s.sound_file_id, u.login, v.name FROM sounds s 
     	JOIN vehicles v on v.id = s.vehicle_id
     	JOIN users u on s.author_id = u.id`
@@ -77,10 +77,10 @@ func (p PqRepository) GetAllSounds() ([]*domain.Sound, error) {
 
 	tagsMap, err := p.getTagsMap()
 
-	var sounds []*domain.Sound
+	var sounds []*domain2.Sound
 
 	for sRows.Next() {
-		sound := &domain.Sound{}
+		sound := &domain2.Sound{}
 		err := sRows.Scan(
 			&sound.Id,
 			&sound.Name,
@@ -98,7 +98,7 @@ func (p PqRepository) GetAllSounds() ([]*domain.Sound, error) {
 		if tagsMap[sound.Id] != nil {
 			sound.Tags = tagsMap[sound.Id]
 		} else {
-			sound.Tags = []*domain.Tag{}
+			sound.Tags = []*domain2.Tag{}
 		}
 
 		sounds = append(sounds, sound)
@@ -111,12 +111,12 @@ func (p PqRepository) GetAllSounds() ([]*domain.Sound, error) {
 	return sounds, nil
 }
 
-func (p PqRepository) GetSounds(limit, offset int) ([]*domain.Sound, error) {
+func (p PqRepository) GetSounds(limit, offset int) ([]*domain2.Sound, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PqRepository) GetSoundsNameLike(name string) ([]*domain.Sound, error) {
+func (p PqRepository) GetSoundsNameLike(name string) ([]*domain2.Sound, error) {
 	rows, err := p.db.Query(
 		`SELECT s.id, s.name, s.description, s.author_id, s.vehicle_id, s.sound_file_id, s.picture_file_id, u.login, v.name
 				FROM sounds s 
@@ -128,10 +128,10 @@ func (p PqRepository) GetSoundsNameLike(name string) ([]*domain.Sound, error) {
 		return nil, err
 	}
 
-	var result []*domain.Sound
+	var result []*domain2.Sound
 
 	for rows.Next() {
-		s := &domain.Sound{}
+		s := &domain2.Sound{}
 		err := rows.Scan(
 			&s.Id,
 			&s.Name,
@@ -155,7 +155,7 @@ func (p PqRepository) GetSoundsNameLike(name string) ([]*domain.Sound, error) {
 	return result, nil
 }
 
-func (p PqRepository) GetSoundsByTagId(tagId string) ([]*domain.Sound, error) {
+func (p PqRepository) GetSoundsByTagId(tagId string) ([]*domain2.Sound, error) {
 	rows, err := p.db.Query(
 		`SELECT s.id, 
        				  s.name, 
@@ -175,10 +175,10 @@ func (p PqRepository) GetSoundsByTagId(tagId string) ([]*domain.Sound, error) {
 		return nil, err
 	}
 
-	sounds := make([]*domain.Sound, 0)
+	sounds := make([]*domain2.Sound, 0)
 
 	for rows.Next() {
-		s := &domain.Sound{}
+		s := &domain2.Sound{}
 		if err := rows.Scan(
 			&s.Id,
 			&s.Name,
@@ -201,7 +201,7 @@ func (p PqRepository) GetSoundsByTagId(tagId string) ([]*domain.Sound, error) {
 	return sounds, nil
 }
 
-func (p PqRepository) GetSoundsByVehicleId(vehicleId string) ([]*domain.Sound, error) {
+func (p PqRepository) GetSoundsByVehicleId(vehicleId string) ([]*domain2.Sound, error) {
 	rows, err := p.db.Query(
 		`SELECT s.id, 
        				  s.name, 
@@ -220,10 +220,10 @@ func (p PqRepository) GetSoundsByVehicleId(vehicleId string) ([]*domain.Sound, e
 		return nil, err
 	}
 
-	sounds := make([]*domain.Sound, 0)
+	sounds := make([]*domain2.Sound, 0)
 
 	for rows.Next() {
-		s := &domain.Sound{}
+		s := &domain2.Sound{}
 		if err := rows.Scan(
 			&s.Id,
 			&s.Name,
@@ -246,7 +246,7 @@ func (p PqRepository) GetSoundsByVehicleId(vehicleId string) ([]*domain.Sound, e
 	return sounds, nil
 }
 
-func (p PqRepository) getTagsMap() (map[string][]*domain.Tag, error) {
+func (p PqRepository) getTagsMap() (map[string][]*domain2.Tag, error) {
 	tQuery := `SELECT st.sound_id, st.tag_id, t.title FROM sound_tags st
 		JOIN tags t ON t.id = st.tag_id`
 
@@ -255,11 +255,11 @@ func (p PqRepository) getTagsMap() (map[string][]*domain.Tag, error) {
 		return nil, err
 	}
 
-	tagsMap := make(map[string][]*domain.Tag)
+	tagsMap := make(map[string][]*domain2.Tag)
 	var soundId string
 
 	for tRows.Next() {
-		st := &domain.Tag{}
+		st := &domain2.Tag{}
 		err := tRows.Scan(&soundId, &st.Id, &st.Title)
 		if err != nil {
 			return nil, err

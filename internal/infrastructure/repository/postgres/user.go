@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/timickb/transport-sound/internal/domain"
-	"github.com/timickb/transport-sound/internal/repository"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/repository"
 )
 
 type PqRepository struct {

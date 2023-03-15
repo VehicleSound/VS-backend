@@ -1,24 +1,25 @@
-package usecase
+package auth
 
 import (
 	"crypto/sha256"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 	"github.com/timickb/transport-sound/internal/interfaces"
 	"time"
 )
 
-type AuthUseCase struct {
-	repo Repository
+type UseCase struct {
+	repo usecase.Repository
 	log  interfaces.Logger
 }
 
-func NewAuthUseCase(r Repository, log interfaces.Logger) *AuthUseCase {
-	return &AuthUseCase{repo: r, log: log}
+func NewAuthUseCase(r usecase.Repository, log interfaces.Logger) *UseCase {
+	return &UseCase{repo: r, log: log}
 }
 
-func (u *AuthUseCase) SignIn(email, password, secret string) (string, error) {
+func (u *UseCase) SignIn(email, password, secret string) (string, error) {
 	user, err := u.repo.GetUserByEmail(email)
 	if err != nil {
 		return "", fmt.Errorf("err sign in: %w", err)
@@ -47,7 +48,7 @@ func (u *AuthUseCase) SignIn(email, password, secret string) (string, error) {
 	return tokenStr, nil
 }
 
-func (u *AuthUseCase) ValidateToken(tokenRaw, secret string) (*domain.User, error) {
+func (u *UseCase) ValidateToken(tokenRaw, secret string) (*domain.User, error) {
 	claims := jwt.MapClaims{}
 
 	_, err := jwt.ParseWithClaims(tokenRaw, claims, func(t *jwt.Token) (interface{}, error) {

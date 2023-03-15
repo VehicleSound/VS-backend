@@ -1,38 +1,38 @@
 package delivery
 
 import (
-	"github.com/timickb/transport-sound/internal/controller/dto"
+	dto2 "github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 )
 
 type AuthController interface {
-	SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error)
-	ValidateToken(token string) (*dto.TokenResponse, error)
+	SignIn(req *dto2.AuthRequest) (*dto2.AuthResponse, error)
+	ValidateToken(token string) (*dto2.TokenResponse, error)
 }
 type UserController interface {
-	Register(req *dto.RegisterRequest) (*dto.RegisterResponse, error)
-	ChangeLogin(req *dto.ChangeLoginRequest) error
-	ChangeEmail(req *dto.ChangeEmailRequest) error
-	ChangePassword(req *dto.ChangePasswordRequest) error
-	GetUser(req *dto.GetUserRequest) (*dto.GetUserResponse, error)
-	GetUserById(id string) (*dto.GetUserResponse, error)
-	AddToFav(req *dto.AddToFavRequest) error
+	Register(req *dto2.RegisterRequest) (*dto2.RegisterResponse, error)
+	ChangeLogin(req *dto2.ChangeLoginRequest) error
+	ChangeEmail(req *dto2.ChangeEmailRequest) error
+	ChangePassword(req *dto2.ChangePasswordRequest) error
+	GetUser(req *dto2.GetUserRequest) (*dto2.GetUserResponse, error)
+	GetUserById(id string) (*dto2.GetUserResponse, error)
+	AddToFav(req *dto2.AddToFavRequest) error
 }
 type TagController interface {
-	CreateTag(req *dto.CreateTagRequest) (*dto.CreateTagResponse, error)
-	GetAllTags() ([]*dto.TagResponse, error)
-	GetTagById(id string) (*dto.TagResponse, error)
+	CreateTag(req *dto2.CreateTagRequest) (*dto2.CreateTagResponse, error)
+	GetAllTags() ([]*dto2.TagResponse, error)
+	GetTagById(id string) (*dto2.TagResponse, error)
 }
 
 type FileController interface {
-	UploadImage(req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
-	UploadSound(req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
+	UploadImage(req *dto2.UploadFileRequest) (*dto2.UploadFileResponse, error)
+	UploadSound(req *dto2.UploadFileRequest) (*dto2.UploadFileResponse, error)
 }
 type SearchController interface {
-	Search(req *dto.SearchRequest) ([]*dto.SoundResponse, error)
+	Search(req *dto2.SearchRequest) ([]*dto2.SoundResponse, error)
 }
 type SoundController interface {
-	GetAllSounds() ([]*dto.SoundResponse, error)
-	GetSoundById(id string) (*dto.SoundResponse, error)
-	CreateSound(t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error)
-	GetRandomSounds(limit int) ([]*dto.SoundResponse, error)
+	GetAllSounds() ([]*dto2.SoundResponse, error)
+	GetSoundById(id string) (*dto2.SoundResponse, error)
+	CreateSound(t *dto2.TokenResponse, req *dto2.CreateSoundRequest) (*dto2.CreateSoundResponse, error)
+	GetRandomSounds(limit int) ([]*dto2.SoundResponse, error)
 }

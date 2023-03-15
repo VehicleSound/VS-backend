@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"github.com/timickb/transport-sound/internal/controller/dto"
-	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
 
 func mapSound(s *domain.Sound) *dto.SoundResponse {

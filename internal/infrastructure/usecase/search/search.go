@@ -1,27 +1,28 @@
-package usecase
+package search
 
 import (
 	"fmt"
-	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 	"github.com/timickb/transport-sound/internal/interfaces"
 )
 
-type SearchRequest struct {
+type Request struct {
 	Name       string
 	TagIds     []string
 	VehicleIds []string
 }
 
-type SearchUseCase struct {
-	repo Repository
+type UseCase struct {
+	repo usecase.Repository
 	log  interfaces.Logger
 }
 
-func NewSearchUseCase(repo Repository, log interfaces.Logger) *SearchUseCase {
-	return &SearchUseCase{repo: repo, log: log}
+func NewSearchUseCase(repo usecase.Repository, log interfaces.Logger) *UseCase {
+	return &UseCase{repo: repo, log: log}
 }
 
-func (u *SearchUseCase) Search(req *SearchRequest) ([]*domain.Sound, error) {
+func (u *UseCase) Search(req *Request) ([]*domain.Sound, error) {
 	byName, err := u.repo.GetSoundsNameLike(req.Name)
 	if err != nil {
 		return nil, fmt.Errorf("search err: %w", err)

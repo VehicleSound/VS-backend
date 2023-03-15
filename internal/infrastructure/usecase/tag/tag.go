@@ -1,23 +1,25 @@
-package usecase
+package tag
 
 import (
 	"errors"
 	"fmt"
-	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/utils"
 	"github.com/timickb/transport-sound/internal/interfaces"
 )
 
-type TagUseCase struct {
-	repo Repository
+type UseCase struct {
+	repo usecase.Repository
 	log  interfaces.Logger
 }
 
-func NewTagUseCase(repo Repository, log interfaces.Logger) *TagUseCase {
-	return &TagUseCase{repo: repo}
+func NewTagUseCase(repo usecase.Repository, log interfaces.Logger) *UseCase {
+	return &UseCase{repo: repo}
 }
 
-func (u *TagUseCase) CreateTag(name string) (string, error) {
-	if !validateTag(name) {
+func (u *UseCase) CreateTag(name string) (string, error) {
+	if !utils.ValidateTag(name) {
 		return "", errors.New("err create tag title too short")
 	}
 
@@ -34,7 +36,7 @@ func (u *TagUseCase) CreateTag(name string) (string, error) {
 	return tag.Id, nil
 }
 
-func (u *TagUseCase) GetTagById(id string) (*domain.Tag, error) {
+func (u *UseCase) GetTagById(id string) (*domain.Tag, error) {
 	tag, err := u.repo.GetTagById(id)
 	if err != nil {
 		return nil, fmt.Errorf("err get tag by id: %w", err)
@@ -43,7 +45,7 @@ func (u *TagUseCase) GetTagById(id string) (*domain.Tag, error) {
 	return tag, nil
 }
 
-func (u *TagUseCase) GetTagByTitle(title string) (*domain.Tag, error) {
+func (u *UseCase) GetTagByTitle(title string) (*domain.Tag, error) {
 	tag, err := u.repo.GetTagByTitle(title)
 	if err != nil {
 		return nil, fmt.Errorf("err get tag by title: %w", err)
@@ -52,7 +54,7 @@ func (u *TagUseCase) GetTagByTitle(title string) (*domain.Tag, error) {
 	return tag, nil
 }
 
-func (u *TagUseCase) GetAllTags() ([]*domain.Tag, error) {
+func (u *UseCase) GetAllTags() ([]*domain.Tag, error) {
 	tags, err := u.repo.GetAllTags()
 	if err != nil {
 		return nil, fmt.Errorf("err get all tags: %w", err)

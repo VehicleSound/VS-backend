@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
 
 func (p PqRepository) CreateTag(title string) (*domain.Tag, error) {

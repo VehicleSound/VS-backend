@@ -1,31 +1,33 @@
-package usecase
+package user
 
 import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
-	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/repository"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/utils"
 	"github.com/timickb/transport-sound/internal/interfaces"
-	"github.com/timickb/transport-sound/internal/repository"
 )
 
-type UserUseCase struct {
-	r   Repository
+type UseCase struct {
+	r   usecase.Repository
 	log interfaces.Logger
 }
 
-func NewUserUseCase(r Repository, log interfaces.Logger) *UserUseCase {
-	return &UserUseCase{r: r}
+func NewUserUseCase(r usecase.Repository, log interfaces.Logger) *UseCase {
+	return &UseCase{r: r}
 }
 
-func (u *UserUseCase) CreateUser(login, email, password string) (string, error) {
-	if !validateLogin(login) {
+func (u *UseCase) CreateUser(login, email, password string) (string, error) {
+	if !utils.ValidateLogin(login) {
 		return "", errors.New("err create user: invalid login")
 	}
-	if !validatePassword(password) {
+	if !utils.ValidatePassword(password) {
 		return "", errors.New("err create user: invalid password")
 	}
-	if !validateEmail(email) {
+	if !utils.ValidateEmail(email) {
 		return "", errors.New("err create user: invalid email")
 	}
 
@@ -50,8 +52,8 @@ func (u *UserUseCase) CreateUser(login, email, password string) (string, error) 
 	return user, nil
 }
 
-func (u *UserUseCase) ChangePassword(id, oPwd, nPwd string) error {
-	if !validateLogin(nPwd) {
+func (u *UseCase) ChangePassword(id, oPwd, nPwd string) error {
+	if !utils.ValidateLogin(nPwd) {
 		return errors.New("err password too short")
 	}
 
@@ -73,8 +75,8 @@ func (u *UserUseCase) ChangePassword(id, oPwd, nPwd string) error {
 	return nil
 }
 
-func (u *UserUseCase) ChangeLogin(id, nLogin string) error {
-	if !validateLogin(nLogin) {
+func (u *UseCase) ChangeLogin(id, nLogin string) error {
+	if !utils.ValidateLogin(nLogin) {
 		return errors.New("err change login: login too short")
 	}
 
@@ -91,8 +93,8 @@ func (u *UserUseCase) ChangeLogin(id, nLogin string) error {
 	return nil
 }
 
-func (u *UserUseCase) ChangeEmail(id, nEmail string) error {
-	if !validateEmail(nEmail) {
+func (u *UseCase) ChangeEmail(id, nEmail string) error {
+	if !utils.ValidateEmail(nEmail) {
 		return errors.New("err change email: login too short")
 	}
 
@@ -109,7 +111,7 @@ func (u *UserUseCase) ChangeEmail(id, nEmail string) error {
 	return nil
 }
 
-func (u *UserUseCase) AddToFav(userId, soundId string) error {
+func (u *UseCase) AddToFav(userId, soundId string) error {
 	if err := u.r.AddFavourite(userId, soundId); err != nil {
 		return err
 	}
@@ -117,7 +119,7 @@ func (u *UserUseCase) AddToFav(userId, soundId string) error {
 	return nil
 }
 
-func (u *UserUseCase) Deactivate(id string) error {
+func (u *UseCase) Deactivate(id string) error {
 	_, err := u.r.GetUserById(id)
 	if err != nil {
 		return fmt.Errorf("err deactivate user: %w", err)
@@ -131,7 +133,7 @@ func (u *UserUseCase) Deactivate(id string) error {
 	return nil
 }
 
-func (u *UserUseCase) GetUserByLoginOrEmailOrId(cred string) (*domain.User, error) {
+func (u *UseCase) GetUserByLoginOrEmailOrId(cred string) (*domain.User, error) {
 	userById, errId := u.r.GetUserById(cred)
 	if errId == nil {
 		return userById, nil

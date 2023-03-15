@@ -4,11 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/timickb/transport-sound/internal/config"
-	"github.com/timickb/transport-sound/internal/controller"
 	"github.com/timickb/transport-sound/internal/delivery/http"
+	"github.com/timickb/transport-sound/internal/infrastructure/controller"
+	"github.com/timickb/transport-sound/internal/infrastructure/repository/postgres"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/auth"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/file"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/search"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/sound"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/tag"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase/user"
 	"github.com/timickb/transport-sound/internal/interfaces"
-	"github.com/timickb/transport-sound/internal/repository/postgres"
-	"github.com/timickb/transport-sound/internal/usecase"
 )
 
 func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*http.Server, error) {
@@ -28,12 +33,12 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*htt
 
 	repo := postgres.NewPqRepository(db)
 
-	userService := usecase.NewUserUseCase(repo, logger)
-	authService := usecase.NewAuthUseCase(repo, logger)
-	tagService := usecase.NewTagUseCase(repo, logger)
-	soundService := usecase.NewSoundUseCase(repo, logger)
-	fileService := usecase.NewFileUseCase(repo, logger, cfg.MaxSoundSize)
-	searchService := usecase.NewSearchUseCase(repo, logger)
+	userService := user.NewUserUseCase(repo, logger)
+	authService := auth.NewAuthUseCase(repo, logger)
+	tagService := tag.NewTagUseCase(repo, logger)
+	soundService := sound.NewSoundUseCase(repo, logger)
+	fileService := file.NewFileUseCase(repo, logger, cfg.MaxSoundSize)
+	searchService := search.NewSearchUseCase(repo, logger)
 
 	authController := controller.NewAuthController(authService, cfg.JwtSecret)
 	userController := controller.NewUserController(userService)

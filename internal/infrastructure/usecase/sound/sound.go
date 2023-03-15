@@ -1,24 +1,25 @@
-package usecase
+package sound
 
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/timickb/transport-sound/internal/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 	"github.com/timickb/transport-sound/internal/interfaces"
 	"math/rand"
 	"time"
 )
 
-type SoundUseCase struct {
-	r   Repository
+type UseCase struct {
+	r   usecase.Repository
 	log interfaces.Logger
 }
 
-func NewSoundUseCase(r Repository, log interfaces.Logger) *SoundUseCase {
-	return &SoundUseCase{r: r, log: log}
+func NewSoundUseCase(r usecase.Repository, log interfaces.Logger) *UseCase {
+	return &UseCase{r: r, log: log}
 }
 
-func (u *SoundUseCase) GetSoundById(id string) (*domain.Sound, error) {
+func (u *UseCase) GetSoundById(id string) (*domain.Sound, error) {
 	sound, err := u.r.GetSoundById(id)
 	if err != nil {
 		return nil, fmt.Errorf("get sound by id err: %w", err)
@@ -33,7 +34,7 @@ func (u *SoundUseCase) GetSoundById(id string) (*domain.Sound, error) {
 	return sound, nil
 }
 
-func (u *SoundUseCase) GetAllSounds() ([]*domain.Sound, error) {
+func (u *UseCase) GetAllSounds() ([]*domain.Sound, error) {
 	sounds, err := u.r.GetAllSounds()
 	if err != nil {
 		return nil, err
@@ -42,7 +43,7 @@ func (u *SoundUseCase) GetAllSounds() ([]*domain.Sound, error) {
 	return sounds, nil
 }
 
-func (u *SoundUseCase) CreateSound(ctx UserContext, s *domain.Sound, tid []string) (string, error) {
+func (u *UseCase) CreateSound(ctx usecase.UserContext, s *domain.Sound, tid []string) (string, error) {
 	// Check each tag for existing.
 	for _, tagId := range tid {
 		_, err := u.r.GetTagById(tagId)
@@ -71,7 +72,7 @@ func (u *SoundUseCase) CreateSound(ctx UserContext, s *domain.Sound, tid []strin
 	return s.Id, nil
 }
 
-func (u *SoundUseCase) GetRandomSounds(limit int) ([]*domain.Sound, error) {
+func (u *UseCase) GetRandomSounds(limit int) ([]*domain.Sound, error) {
 	sounds, err := u.r.GetAllSounds()
 	if err != nil {
 		return nil, err
