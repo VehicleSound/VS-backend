@@ -1,4 +1,4 @@
 # Vehicle sound service backend
 
-### Build
+### Run
 `docker-compose up`
