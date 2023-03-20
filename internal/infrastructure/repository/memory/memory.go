@@ -6,40 +6,87 @@ import (
 	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository"
+	"strings"
 	"time"
 )
 
+type soundTag struct {
+	soundId string
+	tagId   string
+}
+
+type favourite struct {
+	userId  string
+	soundId string
+}
+
 type Repository struct {
-	users     map[string]*domain.User
-	tags      map[string]*domain.Tag
-	sounds    map[string]*domain.Sound
-	soundTags map[string]string
-	files     map[string]string
+	users      map[string]*domain.User
+	tags       map[string]*domain.Tag
+	sounds     map[string]*domain.Sound
+	soundTags  []*soundTag
+	files      map[string]string
+	favourites []*favourite
+}
+
+func NewRepository() *Repository {
+	return &Repository{
+		users:      make(map[string]*domain.User),
+		tags:       make(map[string]*domain.Tag),
+		sounds:     make(map[string]*domain.Sound),
+		files:      make(map[string]string),
+		soundTags:  make([]*soundTag, 0),
+		favourites: make([]*favourite, 0),
+	}
 }
 
 func (m Repository) AddTagToSound(soundId, tagId string) error {
-	//TODO implement me
-	panic("implement me")
+	if _, ok := m.sounds[soundId]; !ok {
+		return errors.New("sound not found")
+	}
+	if _, ok := m.tags[tagId]; !ok {
+		return errors.New("tag not found")
+	}
+
+	m.soundTags = append(m.soundTags, &soundTag{
+		soundId: soundId,
+		tagId:   tagId,
+	})
+	return nil
 }
 
 func (m Repository) CreateSound(sound *domain.Sound) error {
-	//TODO implement me
-	panic("implement me")
+	m.sounds[sound.Id] = sound
+	return nil
 }
 
 func (m Repository) CreateFile(id, ext string) error {
-	//TODO implement me
-	panic("implement me")
+	m.files[id] = ext
+	return nil
 }
 
 func (m Repository) GetFileExtById(id string) (string, error) {
-	//TODO implement me
-	panic("implement me")
+	ext, ok := m.files[id]
+	if !ok {
+		return "", errors.New("file not found")
+	}
+	return ext, nil
 }
 
 func (m Repository) AddFavourite(userId, soundId string) error {
-	//TODO implement me
-	panic("implement me")
+	if _, ok := m.users[userId]; !ok {
+		return errors.New("user not found")
+	}
+	if _, ok := m.sounds[soundId]; !ok {
+		return errors.New("sound not found")
+	}
+
+	m.favourites = append(m.favourites, &favourite{
+		userId:  userId,
+		soundId: soundId,
+	})
+
+	return nil
 }
 
 func (m Repository) CreateUser(login, email, pwdHash string) (string, error) {
@@ -146,9 +193,9 @@ func (m Repository) GetTagByTitle(title string) (*domain.Tag, error) {
 
 func (m Repository) GetTagsForSound(soundId string) ([]*domain.Tag, error) {
 	tagIds := make([]string, 0)
-	for tid, sid := range m.soundTags {
-		if sid == soundId {
-			tagIds = append(tagIds, tid)
+	for _, item := range m.soundTags {
+		if item.soundId == soundId {
+			tagIds = append(tagIds, item.tagId)
 		}
 	}
 	tags := make([]*domain.Tag, 0)
@@ -174,21 +221,65 @@ func (m Repository) GetSoundById(id string) (*domain.Sound, error) {
 }
 
 func (m Repository) GetAllSounds() ([]*domain.Sound, error) {
-	return []*domain.Sound{}, nil
+	sounds := make([]*domain.Sound, 0)
+	for _, value := range m.sounds {
+		sounds = append(sounds, value)
+	}
+	return sounds, nil
 }
 
 func (m Repository) GetSounds(limit, offset int) ([]*domain.Sound, error) {
-	return []*domain.Sound{}, nil
+	sounds := make([]*domain.Sound, 0)
+
+	if offset > len(m.sounds) {
+		return nil, errors.New("offset exceeds rows count")
+	}
+
+	currOffset := 0
+	currLimit := 0
+	for _, value := range m.sounds {
+		if currOffset >= offset && currLimit <= limit {
+			sounds = append(sounds, value)
+		}
+		currLimit++
+		currOffset++
+	}
+
+	return sounds, nil
 }
 
 func (m Repository) GetSoundsNameLike(name string) ([]*domain.Sound, error) {
-	return []*domain.Sound{}, nil
+	sounds := make([]*domain.Sound, 0)
+	for _, value := range m.sounds {
+		if strings.Contains(value.Name, name) {
+			sounds = append(sounds, value)
+		}
+	}
+	return sounds, nil
 }
 
 func (m Repository) GetSoundsByTagId(tagId string) ([]*domain.Sound, error) {
-	return []*domain.Sound{}, nil
+	sounds := make([]*domain.Sound, 0)
+
+	for _, sound := range m.sounds {
+		for _, tag := range sound.Tags {
+			if tag.Id == tagId {
+				sounds = append(sounds, sound)
+			}
+		}
+	}
+
+	return sounds, nil
 }
 
 func (m Repository) GetSoundsByVehicleId(vehicleId string) ([]*domain.Sound, error) {
-	return []*domain.Sound{}, nil
+	sounds := make([]*domain.Sound, 0)
+
+	for _, sound := range m.sounds {
+		if sound.VehicleId == vehicleId {
+			sounds = append(sounds, sound)
+		}
+	}
+
+	return sounds, nil
 }
