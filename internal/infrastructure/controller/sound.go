@@ -3,13 +3,12 @@ package controller
 import (
 	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
-	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 )
 
 type SoundUseCase interface {
 	GetAllSounds() ([]*domain.Sound, error)
 	GetSoundById(id string) (*domain.Sound, error)
-	CreateSound(ctx usecase.UserContext, s *domain.Sound, tid []string) (string, error)
+	CreateSound(s *domain.Sound, tid []string) (string, error)
 	GetRandomSounds(limit int) ([]*domain.Sound, error)
 }
 
@@ -52,7 +51,7 @@ func (c *SoundController) CreateSound(t *dto.TokenResponse, req *dto.CreateSound
 		VehicleId:     req.VehicleId,
 	}
 
-	id, err := c.u.CreateSound(nil, sound, req.TagIds)
+	id, err := c.u.CreateSound(sound, req.TagIds)
 	if err != nil {
 		return nil, err
 	}
