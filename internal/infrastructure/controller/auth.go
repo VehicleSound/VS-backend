@@ -16,7 +16,7 @@ type AuthController struct {
 }
 
 func NewAuthController(u AuthUseCase, secret string) *AuthController {
-	return &AuthController{u: u}
+	return &AuthController{u: u, secret: secret}
 }
 
 func (c *AuthController) SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error) {
