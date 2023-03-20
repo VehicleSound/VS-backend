@@ -1,7 +1,7 @@
 package controller
 
 import (
-	dto2 "github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
+	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 )
@@ -21,20 +21,20 @@ func NewSoundController(u SoundUseCase) *SoundController {
 	return &SoundController{u: u}
 }
 
-func (c *SoundController) GetAllSounds() ([]*dto2.SoundResponse, error) {
+func (c *SoundController) GetAllSounds() ([]*dto.SoundResponse, error) {
 	sounds, err := c.u.GetAllSounds()
 	if err != nil {
 		return nil, err
 	}
 
-	resp := make([]*dto2.SoundResponse, len(sounds))
+	resp := make([]*dto.SoundResponse, len(sounds))
 	for i, s := range sounds {
 		resp[i] = mapSound(s)
 	}
 	return resp, nil
 }
 
-func (c *SoundController) GetSoundById(id string) (*dto2.SoundResponse, error) {
+func (c *SoundController) GetSoundById(id string) (*dto.SoundResponse, error) {
 	sound, err := c.u.GetSoundById(id)
 	if err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (c *SoundController) GetSoundById(id string) (*dto2.SoundResponse, error) {
 	return mapSound(sound), nil
 }
 
-func (c *SoundController) CreateSound(t *dto2.TokenResponse, req *dto2.CreateSoundRequest) (*dto2.CreateSoundResponse, error) {
+func (c *SoundController) CreateSound(t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error) {
 	sound := &domain.Sound{
 		Name:          req.Name,
 		Description:   req.Description,
@@ -57,16 +57,16 @@ func (c *SoundController) CreateSound(t *dto2.TokenResponse, req *dto2.CreateSou
 		return nil, err
 	}
 
-	return &dto2.CreateSoundResponse{SoundId: id}, nil
+	return &dto.CreateSoundResponse{SoundId: id}, nil
 }
 
-func (c *SoundController) GetRandomSounds(limit int) ([]*dto2.SoundResponse, error) {
+func (c *SoundController) GetRandomSounds(limit int) ([]*dto.SoundResponse, error) {
 	sounds, err := c.u.GetRandomSounds(limit)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := make([]*dto2.SoundResponse, len(sounds))
+	resp := make([]*dto.SoundResponse, len(sounds))
 	for i, s := range sounds {
 		resp[i] = mapSound(s)
 	}

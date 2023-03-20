@@ -1,7 +1,7 @@
 package controller
 
 import (
-	dto2 "github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
+	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase/search"
 )
@@ -18,7 +18,7 @@ func NewSearchController(u SearchUseCase) *SearchController {
 	return &SearchController{u: u}
 }
 
-func (c *SearchController) Search(req *dto2.SearchRequest) ([]*dto2.SoundResponse, error) {
+func (c *SearchController) Search(req *dto.SearchRequest) ([]*dto.SoundResponse, error) {
 	sounds, err := c.u.Search(&search.Request{
 		Name:       req.Name,
 		TagIds:     req.TagIds,
@@ -28,7 +28,7 @@ func (c *SearchController) Search(req *dto2.SearchRequest) ([]*dto2.SoundRespons
 		return nil, err
 	}
 
-	resp := make([]*dto2.SoundResponse, len(sounds))
+	resp := make([]*dto.SoundResponse, len(sounds))
 	for i, s := range sounds {
 		resp[i] = mapSound(s)
 	}

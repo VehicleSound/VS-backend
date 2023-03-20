@@ -1,7 +1,7 @@
 package controller
 
 import (
-	dto2 "github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
+	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
 
@@ -20,25 +20,25 @@ func NewTagController(u TagUseCase) *TagController {
 	return &TagController{u: u}
 }
 
-func (c *TagController) CreateTag(req *dto2.CreateTagRequest) (*dto2.CreateTagResponse, error) {
+func (c *TagController) CreateTag(req *dto.CreateTagRequest) (*dto.CreateTagResponse, error) {
 	tagId, err := c.u.CreateTag(req.Title)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto2.CreateTagResponse{TagId: tagId}, nil
+	return &dto.CreateTagResponse{TagId: tagId}, nil
 }
 
-func (c *TagController) GetAllTags() ([]*dto2.TagResponse, error) {
+func (c *TagController) GetAllTags() ([]*dto.TagResponse, error) {
 	tags, err := c.u.GetAllTags()
 	if err != nil {
 		return nil, err
 	}
 
-	var response []*dto2.TagResponse
+	var response []*dto.TagResponse
 
 	for _, tag := range tags {
-		response = append(response, &dto2.TagResponse{
+		response = append(response, &dto.TagResponse{
 			Id:    tag.Id,
 			Title: tag.Title,
 		})
@@ -47,13 +47,13 @@ func (c *TagController) GetAllTags() ([]*dto2.TagResponse, error) {
 	return response, nil
 }
 
-func (c *TagController) GetTagById(id string) (*dto2.TagResponse, error) {
+func (c *TagController) GetTagById(id string) (*dto.TagResponse, error) {
 	tag, err := c.u.GetTagById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto2.TagResponse{
+	return &dto.TagResponse{
 		Id:    tag.Id,
 		Title: tag.Title,
 	}, nil
