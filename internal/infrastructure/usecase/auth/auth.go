@@ -2,8 +2,10 @@ package auth
 
 import (
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/mitchellh/mapstructure"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 	"github.com/timickb/transport-sound/internal/interfaces"
@@ -51,19 +53,20 @@ func (u *UseCase) SignIn(email, password, secret string) (string, error) {
 func (u *UseCase) ValidateToken(tokenRaw, secret string) (*domain.User, error) {
 	claims := jwt.MapClaims{}
 
-	_, err := jwt.ParseWithClaims(tokenRaw, claims, func(t *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenRaw, claims, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("token validation failed: %w", err)
+		return nil, fmt.Errorf("failed to parse token: %w", err)
 	}
 
-	user := &domain.User{
-		Id:        fmt.Sprintf("%v", claims["id"]),
-		Login:     fmt.Sprintf("%v", claims["login"]),
-		Email:     fmt.Sprintf("%v", claims["email"]),
-		Confirmed: claims["confirmed"].(bool),
-		Active:    claims["active"].(bool),
+	if !token.Valid {
+		return nil, errors.New("invalid token")
+	}
+
+	user := &domain.User{}
+	if err = mapstructure.Decode(claims, user); err != nil {
+		return nil, fmt.Errorf("failed to decode claims: %w", err)
 	}
 
 	return user, nil
