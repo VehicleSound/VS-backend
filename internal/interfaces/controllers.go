@@ -1,4 +1,4 @@
-package delivery
+package interfaces
 
 import (
 	dto2 "github.com/timickb/transport-sound/internal/infrastructure/controller/dto"

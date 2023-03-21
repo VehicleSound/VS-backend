@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/timickb/transport-sound/internal/config"
-	"github.com/timickb/transport-sound/internal/delivery"
+	"github.com/timickb/transport-sound/internal/interfaces"
 	"strings"
 )
 
@@ -12,22 +12,22 @@ type Server struct {
 	router *gin.Engine
 	config *config.AppConfig
 
-	auth   delivery.AuthController
-	user   delivery.UserController
-	tag    delivery.TagController
-	sound  delivery.SoundController
-	file   delivery.FileController
-	search delivery.SearchController
+	auth   interfaces.AuthController
+	user   interfaces.UserController
+	tag    interfaces.TagController
+	sound  interfaces.SoundController
+	file   interfaces.FileController
+	search interfaces.SearchController
 }
 
 func NewHttpServer(
 	config *config.AppConfig,
-	auth delivery.AuthController,
-	user delivery.UserController,
-	tag delivery.TagController,
-	sound delivery.SoundController,
-	file delivery.FileController,
-	search delivery.SearchController) *Server {
+	auth interfaces.AuthController,
+	user interfaces.UserController,
+	tag interfaces.TagController,
+	sound interfaces.SoundController,
+	file interfaces.FileController,
+	search interfaces.SearchController) *Server {
 
 	s := &Server{
 		router: gin.Default(),
