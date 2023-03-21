@@ -10,7 +10,7 @@ func (s *Server) login(ctx *gin.Context) {
 	req := dto.AuthRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -19,21 +19,25 @@ func (s *Server) login(ctx *gin.Context) {
 
 	resp, err := s.auth.SignIn(&req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) register(ctx *gin.Context) {
 	req := dto.RegisterRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -42,21 +46,25 @@ func (s *Server) register(ctx *gin.Context) {
 
 	resp, err := s.user.Register(&req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) createTag(ctx *gin.Context) {
 	req := dto.CreateTagRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -65,28 +73,36 @@ func (s *Server) createTag(ctx *gin.Context) {
 
 	resp, err := s.tag.CreateTag(&req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) getAllTags(ctx *gin.Context) {
 	resp, err := s.tag.GetAllTags()
 
 	if err != nil {
-		ctx.IndentedJSON(500, &ErrorResponse{
+		ctx.IndentedJSON(500, Response{
 			Code:    500,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) getTagById(ctx *gin.Context) {
@@ -94,28 +110,36 @@ func (s *Server) getTagById(ctx *gin.Context) {
 	resp, err := s.tag.GetTagById(id)
 
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) getAllSounds(ctx *gin.Context) {
 	resp, err := s.sound.GetAllSounds()
 
 	if err != nil {
-		ctx.IndentedJSON(500, &ErrorResponse{
+		ctx.IndentedJSON(500, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) getSoundById(ctx *gin.Context) {
@@ -123,20 +147,24 @@ func (s *Server) getSoundById(ctx *gin.Context) {
 
 	sound, err := s.sound.GetSoundById(id)
 	if err != nil {
-		ctx.IndentedJSON(500, &ErrorResponse{
+		ctx.IndentedJSON(500, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, sound)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    sound,
+	})
 }
 
 func (s *Server) uploadImage(ctx *gin.Context) {
 	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -145,20 +173,24 @@ func (s *Server) uploadImage(ctx *gin.Context) {
 
 	resp, err := s.file.UploadImage(req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) uploadSound(ctx *gin.Context) {
 	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -167,19 +199,23 @@ func (s *Server) uploadSound(ctx *gin.Context) {
 
 	resp, err := s.file.UploadSound(req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) createSound(ctx *gin.Context) {
 	req := &dto.CreateSoundRequest{}
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -187,13 +223,17 @@ func (s *Server) createSound(ctx *gin.Context) {
 
 	resp, err := s.sound.CreateSound(nil, req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) getUserById(ctx *gin.Context) {
@@ -201,21 +241,25 @@ func (s *Server) getUserById(ctx *gin.Context) {
 
 	resp, err := s.user.GetUserById(id)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) getUserByCredentials(ctx *gin.Context) {
 	req := &dto.GetUserRequest{}
 
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -223,20 +267,24 @@ func (s *Server) getUserByCredentials(ctx *gin.Context) {
 
 	resp, err := s.user.GetUser(req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) searchSounds(ctx *gin.Context) {
 	req := &dto.SearchRequest{}
 
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -244,45 +292,57 @@ func (s *Server) searchSounds(ctx *gin.Context) {
 
 	resp, err := s.search.Search(req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) randomSounds(ctx *gin.Context) {
 	resp, err := s.sound.GetRandomSounds(20)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 	}
 
-	ctx.IndentedJSON(200, resp)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp,
+	})
 }
 
 func (s *Server) me(ctx *gin.Context) {
 	resp, ok := ctx.Get("user")
 	if !ok {
-		ctx.IndentedJSON(401, &ErrorResponse{
+		ctx.IndentedJSON(401, Response{
 			Code:    401,
 			Message: "Unauthorized",
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, resp.(*dto.TokenResponse))
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+		Data:    resp.(*dto.TokenResponse),
+	})
 }
 
 func (s *Server) addFavourite(ctx *gin.Context) {
 	req := &dto.AddToFavRequest{}
 
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: "Invalid body",
 		})
@@ -290,12 +350,15 @@ func (s *Server) addFavourite(ctx *gin.Context) {
 
 	err := s.user.AddToFav(req)
 	if err != nil {
-		ctx.IndentedJSON(400, &ErrorResponse{
+		ctx.IndentedJSON(400, Response{
 			Code:    400,
 			Message: err.Error(),
 		})
 		return
 	}
 
-	ctx.IndentedJSON(200, nil)
+	ctx.IndentedJSON(200, Response{
+		Code:    200,
+		Message: SuccessMessage,
+	})
 }
