@@ -3,23 +3,18 @@ package postgres
 import (
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
 
-func (p PqRepository) CreateTag(title string) (*domain.Tag, error) {
+func (p PqRepository) CreateTag(tag domain.Tag) error {
 	st := `INSERT INTO tags (id, title) VALUES ($1, $2)`
-	id := uuid.NewString()
 
-	_, err := p.db.Exec(st, id, title)
+	_, err := p.db.Exec(st, tag.Id, tag.Title)
 	if err != nil {
-		return nil, fmt.Errorf("db insertion err: %w", err)
+		return fmt.Errorf("db insertion err: %w", err)
 	}
 
-	return &domain.Tag{
-		Id:    id,
-		Title: title,
-	}, nil
+	return nil
 }
 
 func (p PqRepository) GetTagById(id string) (*domain.Tag, error) {

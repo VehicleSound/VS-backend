@@ -3,6 +3,7 @@ package tag
 import (
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase/utils"
@@ -28,12 +29,17 @@ func (u *UseCase) CreateTag(name string) (string, error) {
 		return "", errors.New("err create tag: title already exists")
 	}
 
-	tag, err := u.repo.CreateTag(name)
-	if err != nil {
+	tagId := uuid.NewString()
+	tag := domain.Tag{
+		Id:    tagId,
+		Title: name,
+	}
+
+	if err := u.repo.CreateTag(tag); err != nil {
 		return "", fmt.Errorf("err create tag: %w", err)
 	}
 
-	return tag.Id, nil
+	return tagId, nil
 }
 
 func (u *UseCase) GetTagById(id string) (*domain.Tag, error) {

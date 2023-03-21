@@ -13,7 +13,7 @@ type Repository interface {
 	GetUserById(id string) (*domain.User, error)
 	EditUser(id string, payload *repository.UserEditPayload) (*domain.User, error)
 
-	CreateTag(title string) (*domain.Tag, error)
+	CreateTag(tag domain.Tag) error
 	GetTagById(id string) (*domain.Tag, error)
 	GetAllTags() ([]*domain.Tag, error)
 	GetTagByTitle(title string) (*domain.Tag, error)

@@ -156,13 +156,9 @@ func (m Repository) EditUser(id string, payload *repository.UserEditPayload) (*d
 	return m.users[id], nil
 }
 
-func (m Repository) CreateTag(title string) (*domain.Tag, error) {
-	tag := &domain.Tag{
-		Id:    uuid.NewString(),
-		Title: title,
-	}
-	m.tags[tag.Id] = tag
-	return tag, nil
+func (m Repository) CreateTag(tag domain.Tag) error {
+	m.tags[tag.Id] = &tag
+	return nil
 }
 
 func (m Repository) GetTagById(id string) (*domain.Tag, error) {
