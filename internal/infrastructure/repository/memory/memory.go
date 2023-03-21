@@ -89,28 +89,27 @@ func (m Repository) AddFavourite(userId, soundId string) error {
 	return nil
 }
 
-func (m Repository) CreateUser(login, email, pwdHash string) (string, error) {
+func (m Repository) CreateUser(user domain.User) error {
 	for _, user := range m.users {
-		if user.Login == login {
-			return "", errors.New("login already exists")
+		if user.Login == user.Login {
+			return errors.New("login already exists")
 		}
-		if user.Email == email {
-			return "", errors.New("email already exists")
+		if user.Email == user.Email {
+			return errors.New("email already exists")
 		}
 	}
 
-	user := &domain.User{
+	m.users[user.Id] = &domain.User{
 		Id:           uuid.NewString(),
-		Login:        login,
-		Email:        email,
-		PasswordHash: pwdHash,
+		Login:        user.Login,
+		Email:        user.Email,
+		PasswordHash: user.PasswordHash,
 		Confirmed:    false,
 		Active:       true,
 		DateCreated:  time.Now(),
 	}
 
-	m.users[user.Id] = user
-	return user.Id, nil
+	return nil
 }
 
 func (m Repository) GetUserByLogin(login string) (*domain.User, error) {

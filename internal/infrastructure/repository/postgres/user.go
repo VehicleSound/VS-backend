@@ -3,7 +3,6 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository"
 )
@@ -12,18 +11,16 @@ type PqRepository struct {
 	db *sql.DB
 }
 
-func (p PqRepository) CreateUser(login, email, pwdHash string) (string, error) {
-	id := uuid.NewString()
-
+func (p PqRepository) CreateUser(user domain.User) error {
 	st := `INSERT INTO users (id, login, email, "passwordHash") 
 		VALUES ($1, $2, $3, $4)`
 
-	_, err := p.db.Exec(st, id, login, email, pwdHash)
+	_, err := p.db.Exec(st, user.Id, user.Login, user.Email, user.PasswordHash)
 	if err != nil {
-		return "", fmt.Errorf("db insertion err %w", err)
+		return fmt.Errorf("db insertion err %w", err)
 	}
 
-	return id, nil
+	return nil
 }
 
 func (p PqRepository) GetUserByLogin(login string) (*domain.User, error) {

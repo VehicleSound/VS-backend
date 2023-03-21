@@ -4,11 +4,13 @@ import (
 	"crypto/sha256"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase/utils"
 	"github.com/timickb/transport-sound/internal/interfaces"
+	"time"
 )
 
 type UseCase struct {
@@ -41,15 +43,25 @@ func (u *UseCase) CreateUser(login, email, password string) (string, error) {
 		return "", errors.New("err create user: email already exists")
 	}
 
+	userId := uuid.NewString()
 	pwdHash := sha256.Sum256([]byte(password))
 	pwdHashStr := fmt.Sprintf("%x", pwdHash)
 
-	user, err := u.r.CreateUser(login, email, pwdHashStr)
-	if err != nil {
+	user := domain.User{
+		Id:           userId,
+		Login:        login,
+		Email:        email,
+		PasswordHash: pwdHashStr,
+		Confirmed:    false,
+		Active:       true,
+		DateCreated:  time.Now(),
+	}
+
+	if err := u.r.CreateUser(user); err != nil {
 		return "", fmt.Errorf("err create user: %w", err)
 	}
 
-	return user, nil
+	return userId, nil
 }
 
 func (u *UseCase) ChangePassword(id, oPwd, nPwd string) error {
