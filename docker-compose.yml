@@ -30,7 +30,7 @@ services:
     tty: true
     ports:
       - "${APP_PORT}:${APP_PORT}"
-    restart: "no"
+    restart: always
     depends_on:
       - db
       - migrate
