@@ -31,6 +31,10 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*htt
 		return nil, err
 	}
 
+	if err := db.Ping(); err != nil {
+		return nil, err
+	}
+
 	repo := postgres.NewPqRepository(db)
 
 	userService := user.NewUserUseCase(repo, logger)
