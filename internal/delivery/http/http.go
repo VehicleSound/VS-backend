@@ -73,7 +73,7 @@ func (s *Server) authMiddleware(ctx *gin.Context) {
 		resp, err := s.auth.GetUserByToken(token)
 
 		if err != nil {
-			ctx.AbortWithStatusJSON(401, &ErrorResponse{
+			ctx.AbortWithStatusJSON(401, Response{
 				Code:    401,
 				Message: err.Error(),
 			})
@@ -85,7 +85,7 @@ func (s *Server) authMiddleware(ctx *gin.Context) {
 		return
 	}
 
-	ctx.AbortWithStatusJSON(401, &ErrorResponse{
+	ctx.AbortWithStatusJSON(401, Response{
 		Code:    401,
 		Message: "Wrong auth token",
 	})
