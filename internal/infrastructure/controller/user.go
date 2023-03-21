@@ -8,6 +8,7 @@ import (
 
 type UserUseCase interface {
 	GetUserByLoginOrEmailOrId(cred string) (*domain.User, error)
+	ValidateRegistration(login, email, password string) error
 	CreateUser(login, email, password string) (string, error)
 	ChangePassword(id, oPwd, nPwd string) error
 	ChangeLogin(id, nLogin string) error
@@ -25,6 +26,10 @@ func NewUserController(u UserUseCase) *UserController {
 }
 
 func (c *UserController) Register(req *dto.RegisterRequest) (*dto.RegisterResponse, error) {
+	if err := c.u.ValidateRegistration(req.Login, req.Email, req.Password); err != nil {
+		return nil, err
+	}
+
 	userId, err := c.u.CreateUser(req.Login, req.Email, req.Password)
 	if err != nil {
 		return nil, err

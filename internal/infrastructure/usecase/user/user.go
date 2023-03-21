@@ -22,30 +22,33 @@ func NewUserUseCase(r usecase.Repository, log interfaces.Logger) *UseCase {
 	return &UseCase{r: r}
 }
 
-func (u *UseCase) CreateUser(login, email, password string) (string, error) {
-	if !utils.ValidateLogin(login) {
-		return "", errors.New("err create user: invalid login")
-	}
+func (u *UseCase) ValidateRegistration(login, email, password string) error {
 	if !utils.ValidatePassword(password) {
-		return "", errors.New("err create user: invalid password")
+		return errors.New("err validate reg: invalid password")
 	}
 	if !utils.ValidateEmail(email) {
-		return "", errors.New("err create user: invalid email")
+		return errors.New("err validate reg: invalid email")
+	}
+	if !utils.ValidateLogin(login) {
+		return errors.New("err validate reg: invalid login")
 	}
 
 	exLogin, errLogin := u.r.GetUserByLogin(login)
 	if errLogin == nil && exLogin.Login == login {
-		return "", errors.New("err create user: login already exists")
+		return errors.New("err validate reg: login already exists")
 	}
 
 	exEmail, errEmail := u.r.GetUserByEmail(email)
 	if errEmail == nil && exEmail.Email == email {
-		return "", errors.New("err create user: email already exists")
+		return errors.New("err validate reg: email already exists")
 	}
 
+	return nil
+}
+
+func (u *UseCase) CreateUser(login, email, password string) (string, error) {
 	userId := uuid.NewString()
-	pwdHash := sha256.Sum256([]byte(password))
-	pwdHashStr := fmt.Sprintf("%x", pwdHash)
+	pwdHashStr := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
 
 	user := domain.User{
 		Id:           userId,
