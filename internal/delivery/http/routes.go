@@ -17,7 +17,7 @@ func (s *Server) login(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := s.auth.SignIn(&req)
+	resp, err := s.auth.SignIn(ctx, &req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -44,7 +44,7 @@ func (s *Server) register(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := s.user.Register(&req)
+	resp, err := s.user.Register(ctx, &req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -71,7 +71,7 @@ func (s *Server) createTag(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := s.tag.CreateTag(&req)
+	resp, err := s.tag.CreateTag(ctx, &req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -88,7 +88,7 @@ func (s *Server) createTag(ctx *gin.Context) {
 }
 
 func (s *Server) getAllTags(ctx *gin.Context) {
-	resp, err := s.tag.GetAllTags()
+	resp, err := s.tag.GetAllTags(ctx)
 
 	if err != nil {
 		ctx.IndentedJSON(500, Response{
@@ -107,7 +107,7 @@ func (s *Server) getAllTags(ctx *gin.Context) {
 
 func (s *Server) getTagById(ctx *gin.Context) {
 	id := ctx.Param("id")
-	resp, err := s.tag.GetTagById(id)
+	resp, err := s.tag.GetTagById(ctx, id)
 
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
@@ -125,7 +125,7 @@ func (s *Server) getTagById(ctx *gin.Context) {
 }
 
 func (s *Server) getAllSounds(ctx *gin.Context) {
-	resp, err := s.sound.GetAllSounds()
+	resp, err := s.sound.GetAllSounds(ctx)
 
 	if err != nil {
 		ctx.IndentedJSON(500, Response{
@@ -145,7 +145,7 @@ func (s *Server) getAllSounds(ctx *gin.Context) {
 func (s *Server) getSoundById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	sound, err := s.sound.GetSoundById(id)
+	sound, err := s.sound.GetSoundById(ctx, id)
 	if err != nil {
 		ctx.IndentedJSON(500, Response{
 			Code:    400,
@@ -171,7 +171,7 @@ func (s *Server) uploadImage(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := s.file.UploadImage(req)
+	resp, err := s.file.UploadImage(ctx, req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -197,7 +197,7 @@ func (s *Server) uploadSound(ctx *gin.Context) {
 		return
 	}
 
-	resp, err := s.file.UploadSound(req)
+	resp, err := s.file.UploadSound(ctx, req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -221,7 +221,7 @@ func (s *Server) createSound(ctx *gin.Context) {
 		})
 	}
 
-	resp, err := s.sound.CreateSound(nil, req)
+	resp, err := s.sound.CreateSound(ctx, nil, req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -239,7 +239,7 @@ func (s *Server) createSound(ctx *gin.Context) {
 func (s *Server) getUserById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	resp, err := s.user.GetUserById(id)
+	resp, err := s.user.GetUserById(ctx, id)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -265,7 +265,7 @@ func (s *Server) getUserByCredentials(ctx *gin.Context) {
 		})
 	}
 
-	resp, err := s.user.GetUser(req)
+	resp, err := s.user.GetUser(ctx, req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -290,7 +290,7 @@ func (s *Server) searchSounds(ctx *gin.Context) {
 		})
 	}
 
-	resp, err := s.search.Search(req)
+	resp, err := s.search.Search(ctx, req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -306,7 +306,7 @@ func (s *Server) searchSounds(ctx *gin.Context) {
 }
 
 func (s *Server) randomSounds(ctx *gin.Context) {
-	resp, err := s.sound.GetRandomSounds(20)
+	resp, err := s.sound.GetRandomSounds(ctx, 20)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,
@@ -348,7 +348,7 @@ func (s *Server) addFavourite(ctx *gin.Context) {
 		})
 	}
 
-	err := s.user.AddToFav(req)
+	err := s.user.AddToFav(ctx, req)
 	if err != nil {
 		ctx.IndentedJSON(400, Response{
 			Code:    400,

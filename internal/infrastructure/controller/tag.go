@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
@@ -20,7 +21,7 @@ func NewTagController(u TagUseCase) *TagController {
 	return &TagController{u: u}
 }
 
-func (c *TagController) CreateTag(req *dto.CreateTagRequest) (*dto.CreateTagResponse, error) {
+func (c *TagController) CreateTag(ctx context.Context, req *dto.CreateTagRequest) (*dto.CreateTagResponse, error) {
 	tagId, err := c.u.CreateTag(req.Title)
 	if err != nil {
 		return nil, err
@@ -29,7 +30,7 @@ func (c *TagController) CreateTag(req *dto.CreateTagRequest) (*dto.CreateTagResp
 	return &dto.CreateTagResponse{TagId: tagId}, nil
 }
 
-func (c *TagController) GetAllTags() ([]*dto.TagResponse, error) {
+func (c *TagController) GetAllTags(context.Context) ([]*dto.TagResponse, error) {
 	tags, err := c.u.GetAllTags()
 	if err != nil {
 		return nil, err
@@ -47,7 +48,7 @@ func (c *TagController) GetAllTags() ([]*dto.TagResponse, error) {
 	return response, nil
 }
 
-func (c *TagController) GetTagById(id string) (*dto.TagResponse, error) {
+func (c *TagController) GetTagById(ctx context.Context, id string) (*dto.TagResponse, error) {
 	tag, err := c.u.GetTagById(id)
 	if err != nil {
 		return nil, err

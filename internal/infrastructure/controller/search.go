@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase/search"
@@ -18,7 +19,7 @@ func NewSearchController(u SearchUseCase) *SearchController {
 	return &SearchController{u: u}
 }
 
-func (c *SearchController) Search(req *dto.SearchRequest) ([]*dto.SoundResponse, error) {
+func (c *SearchController) Search(ctx context.Context, req *dto.SearchRequest) ([]*dto.SoundResponse, error) {
 	sounds, err := c.u.Search(&search.Request{
 		Name:       req.Name,
 		TagIds:     req.TagIds,

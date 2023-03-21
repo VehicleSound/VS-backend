@@ -70,7 +70,7 @@ func (s *Server) authMiddleware(ctx *gin.Context) {
 
 	if hv != "" && len(strings.Split(hv, " ")) == 2 {
 		token := strings.Split(hv, " ")[1]
-		resp, err := s.auth.GetUserByToken(token)
+		resp, err := s.auth.GetUserByToken(ctx, token)
 
 		if err != nil {
 			ctx.AbortWithStatusJSON(401, Response{
