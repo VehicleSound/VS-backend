@@ -50,7 +50,7 @@ func (u *UseCase) SignIn(email, password, secret string) (string, error) {
 	return tokenStr, nil
 }
 
-func (u *UseCase) ValidateToken(tokenRaw, secret string) (*domain.User, error) {
+func (u *UseCase) GetUserByToken(tokenRaw, secret string) (*domain.User, error) {
 	claims := jwt.MapClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenRaw, claims, func(t *jwt.Token) (interface{}, error) {

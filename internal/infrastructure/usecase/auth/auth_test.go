@@ -84,7 +84,7 @@ func TestValidateToken(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	decoded, err := authService.ValidateToken(tokenStr, secret)
+	decoded, err := authService.GetUserByToken(tokenStr, secret)
 	if err != nil {
 		t.Fatal(err)
 	}

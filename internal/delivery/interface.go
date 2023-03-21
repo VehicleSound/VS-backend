@@ -6,7 +6,7 @@ import (
 
 type AuthController interface {
 	SignIn(req *dto2.AuthRequest) (*dto2.AuthResponse, error)
-	ValidateToken(token string) (*dto2.TokenResponse, error)
+	GetUserByToken(token string) (*dto2.TokenResponse, error)
 }
 type UserController interface {
 	Register(req *dto2.RegisterRequest) (*dto2.RegisterResponse, error)

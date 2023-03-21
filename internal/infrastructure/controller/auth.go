@@ -7,7 +7,7 @@ import (
 
 type AuthUseCase interface {
 	SignIn(email, password, secret string) (string, error)
-	ValidateToken(tokenRaw, secret string) (*domain.User, error)
+	GetUserByToken(tokenRaw, secret string) (*domain.User, error)
 }
 
 type AuthController struct {
@@ -28,8 +28,8 @@ func (c *AuthController) SignIn(req *dto.AuthRequest) (*dto.AuthResponse, error)
 	return &dto.AuthResponse{Token: token}, nil
 }
 
-func (c *AuthController) ValidateToken(token string) (*dto.TokenResponse, error) {
-	user, err := c.u.ValidateToken(token, c.secret)
+func (c *AuthController) GetUserByToken(token string) (*dto.TokenResponse, error) {
+	user, err := c.u.GetUserByToken(token, c.secret)
 	if err != nil {
 		return nil, err
 	}
