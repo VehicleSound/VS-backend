@@ -29,7 +29,7 @@ func (c *SoundController) GetAllSounds(context.Context) ([]*dto.SoundResponse, e
 
 	resp := make([]*dto.SoundResponse, len(sounds))
 	for i, s := range sounds {
-		resp[i] = mapSound(s)
+		resp[i] = dto.MapSound(s)
 	}
 	return resp, nil
 }
@@ -39,7 +39,7 @@ func (c *SoundController) GetSoundById(ctx context.Context, id string) (*dto.Sou
 	if err != nil {
 		return nil, err
 	}
-	return mapSound(sound), nil
+	return dto.MapSound(sound), nil
 }
 
 func (c *SoundController) CreateSound(ctx context.Context, t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error) {
@@ -68,7 +68,7 @@ func (c *SoundController) GetRandomSounds(ctx context.Context, limit int) ([]*dt
 
 	resp := make([]*dto.SoundResponse, len(sounds))
 	for i, s := range sounds {
-		resp[i] = mapSound(s)
+		resp[i] = dto.MapSound(s)
 	}
 	return resp, nil
 }

@@ -1,21 +1,20 @@
-package controller
+package dto
 
 import (
-	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
 	"github.com/timickb/transport-sound/internal/infrastructure/domain"
 )
 
-func mapSound(s *domain.Sound) *dto.SoundResponse {
-	tags := make([]*dto.TagResponse, len(s.Tags))
+func MapSound(s *domain.Sound) *SoundResponse {
+	tags := make([]*TagResponse, len(s.Tags))
 
 	for i, t := range s.Tags {
-		tags[i] = &dto.TagResponse{
+		tags[i] = &TagResponse{
 			Id:    t.Id,
 			Title: t.Title,
 		}
 	}
 
-	return &dto.SoundResponse{
+	return &SoundResponse{
 		Id:             s.Id,
 		Name:           s.Name,
 		Description:    s.Description,

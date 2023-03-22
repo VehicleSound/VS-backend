@@ -31,7 +31,7 @@ func (c *SearchController) Search(ctx context.Context, req *dto.SearchRequest) (
 
 	resp := make([]*dto.SoundResponse, len(sounds))
 	for i, s := range sounds {
-		resp[i] = mapSound(s)
+		resp[i] = dto.MapSound(s)
 	}
 
 	return resp, nil
