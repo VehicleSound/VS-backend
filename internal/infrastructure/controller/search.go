@@ -15,7 +15,7 @@ type SearchController struct {
 	u SearchUseCase
 }
 
-func NewSearchController(u SearchUseCase) *SearchController {
+func NewSearch(u SearchUseCase) *SearchController {
 	return &SearchController{u: u}
 }
 

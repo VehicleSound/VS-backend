@@ -15,7 +15,7 @@ type FileController struct {
 	u FileUseCase
 }
 
-func NewFileController(u FileUseCase) *FileController {
+func NewFile(u FileUseCase) *FileController {
 	return &FileController{u: u}
 }
 

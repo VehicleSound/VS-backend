@@ -22,7 +22,7 @@ type UserController struct {
 	u UserUseCase
 }
 
-func NewUserController(u UserUseCase) *UserController {
+func NewUser(u UserUseCase) *UserController {
 	return &UserController{u: u}
 }
 

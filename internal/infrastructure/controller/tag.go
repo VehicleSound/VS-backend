@@ -17,7 +17,7 @@ type TagController struct {
 	u TagUseCase
 }
 
-func NewTagController(u TagUseCase) *TagController {
+func NewTag(u TagUseCase) *TagController {
 	return &TagController{u: u}
 }
 

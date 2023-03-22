@@ -37,19 +37,19 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*htt
 
 	repo := postgres.NewPqRepository(db)
 
-	userService := user.NewUserUseCase(repo, logger)
-	authService := auth.NewAuthUseCase(repo, logger)
-	tagService := tag.NewTagUseCase(repo, logger)
-	soundService := sound.NewSoundUseCase(repo, logger)
-	fileService := file.NewFileUseCase(repo, logger, cfg.MaxSoundSize)
-	searchService := search.NewSearchUseCase(repo, logger)
+	userService := user.New(repo, logger)
+	authService := auth.New(repo, logger)
+	tagService := tag.New(repo, logger)
+	soundService := sound.New(repo, logger)
+	fileService := file.New(repo, logger, cfg.MaxSoundSize)
+	searchService := search.New(repo, logger)
 
-	authController := controller.NewAuthController(authService, cfg.JwtSecret)
-	userController := controller.NewUserController(userService)
-	tagController := controller.NewTagController(tagService)
-	soundController := controller.NewSoundController(soundService)
-	fileController := controller.NewFileController(fileService)
-	searchController := controller.NewSearchController(searchService)
+	authController := controller.NewAuth(authService, cfg.JwtSecret)
+	userController := controller.NewUser(userService)
+	tagController := controller.NewTag(tagService)
+	soundController := controller.NewSound(soundService)
+	fileController := controller.NewFile(fileService)
+	searchController := controller.NewSearch(searchService)
 
 	return http.NewHttpServer(
 		cfg,

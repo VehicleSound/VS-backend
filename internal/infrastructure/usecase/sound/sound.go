@@ -15,7 +15,7 @@ type UseCase struct {
 	log interfaces.Logger
 }
 
-func NewSoundUseCase(r usecase.Repository, log interfaces.Logger) *UseCase {
+func New(r usecase.Repository, log interfaces.Logger) *UseCase {
 	return &UseCase{r: r, log: log}
 }
 

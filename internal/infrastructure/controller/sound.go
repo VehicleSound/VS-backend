@@ -17,7 +17,7 @@ type SoundController struct {
 	u SoundUseCase
 }
 
-func NewSoundController(u SoundUseCase) *SoundController {
+func NewSound(u SoundUseCase) *SoundController {
 	return &SoundController{u: u}
 }
 

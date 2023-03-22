@@ -22,7 +22,7 @@ type UseCase struct {
 	maxFileSize int
 }
 
-func NewFileUseCase(r usecase.Repository, log interfaces.Logger, maxFileSize int) *UseCase {
+func New(r usecase.Repository, log interfaces.Logger, maxFileSize int) *UseCase {
 	return &UseCase{r: r, log: log, maxFileSize: maxFileSize}
 }
 

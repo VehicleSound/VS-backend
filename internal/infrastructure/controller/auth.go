@@ -16,7 +16,7 @@ type AuthController struct {
 	secret string
 }
 
-func NewAuthController(u AuthUseCase, secret string) *AuthController {
+func NewAuth(u AuthUseCase, secret string) *AuthController {
 	return &AuthController{u: u, secret: secret}
 }
 

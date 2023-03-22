@@ -33,7 +33,7 @@ func TestSignIn(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	authService := NewAuthUseCase(r, logrus.New())
+	authService := New(r, logrus.New())
 
 	// sign in with right credentials
 	_, err := authService.SignIn(user.Email, pwd, secret)
@@ -57,7 +57,7 @@ func TestSignIn(t *testing.T) {
 func TestValidateToken(t *testing.T) {
 	secret := "secret"
 	r := memory.NewRepository()
-	authService := NewAuthUseCase(r, logrus.New())
+	authService := New(r, logrus.New())
 
 	user := &domain.User{
 		Id:           "12345",

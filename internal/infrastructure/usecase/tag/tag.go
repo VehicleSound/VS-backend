@@ -15,7 +15,7 @@ type UseCase struct {
 	log  interfaces.Logger
 }
 
-func NewTagUseCase(repo usecase.Repository, log interfaces.Logger) *UseCase {
+func New(repo usecase.Repository, log interfaces.Logger) *UseCase {
 	return &UseCase{repo: repo}
 }
 

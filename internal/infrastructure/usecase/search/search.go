@@ -18,7 +18,7 @@ type UseCase struct {
 	log  interfaces.Logger
 }
 
-func NewSearchUseCase(repo usecase.Repository, log interfaces.Logger) *UseCase {
+func New(repo usecase.Repository, log interfaces.Logger) *UseCase {
 	return &UseCase{repo: repo, log: log}
 }
 
