@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/interfaces"
+	"net/http"
+	"regexp"
 	"strings"
 )
 
@@ -55,25 +57,29 @@ func (s *Server) Run() error {
 }
 
 func (s *Server) authMiddleware(ctx *gin.Context) {
-	if strings.HasSuffix(ctx.Request.RequestURI, "signin") ||
-		strings.HasSuffix(ctx.Request.RequestURI, "register") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/assets") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/random") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/search") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/sounds") ||
-		strings.HasPrefix(ctx.Request.RequestURI, "/api/v1/tags") {
-		ctx.Next()
-		return
+	excludedURIs := []string{
+		`^/assets`,
+		`^/api/v1/random`,
+		`^/api/v1/search`,
+		`^/api/v1/sounds`,
+		`^/api/v1/tags`,
 	}
 
-	hv := ctx.Request.Header.Get("Authorization")
+	for _, uri := range excludedURIs {
+		if matched, _ := regexp.MatchString(uri, ctx.Request.RequestURI); matched {
+			ctx.Next()
+			return
+		}
+	}
 
-	if hv != "" && len(strings.Split(hv, " ")) == 2 {
-		token := strings.Split(hv, " ")[1]
+	tokenHeader := ctx.Request.Header.Get("Authorization")
+
+	if tokenHeader != "" && len(strings.Split(tokenHeader, " ")) == 2 {
+		token := strings.Split(tokenHeader, " ")[1]
 		resp, err := s.auth.GetUserByToken(ctx, token)
 
 		if err != nil {
-			ctx.AbortWithStatusJSON(401, Response{
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, Response{
 				Code:    401,
 				Message: err.Error(),
 			})
@@ -85,7 +91,7 @@ func (s *Server) authMiddleware(ctx *gin.Context) {
 		return
 	}
 
-	ctx.AbortWithStatusJSON(401, Response{
+	ctx.AbortWithStatusJSON(http.StatusUnauthorized, Response{
 		Code:    401,
 		Message: "Wrong auth token",
 	})
