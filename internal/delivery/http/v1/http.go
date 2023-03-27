@@ -1,4 +1,4 @@
-package http
+package v1
 
 import (
 	"fmt"
@@ -73,6 +73,8 @@ func (s *Server) authMiddleware(ctx *gin.Context) {
 		`^/api/v1/search`,
 		`^/api/v1/sounds`,
 		`^/api/v1/tags`,
+		`^/api/v1/register`,
+		`^/api/v1/signin`,
 	}
 
 	for _, uri := range excludedURIs {
@@ -120,33 +122,33 @@ func (s *Server) configureRouter() {
 	s.router.Use(s.corsMiddleware)
 	s.router.Use(s.authMiddleware)
 
-	// Static
 	s.router.Static("/assets/images", "./static/images")
 	s.router.Static("/assets/sounds", "./static/sounds")
 
-	// Metrics
 	s.router.GET("/metrics", prometheusHandler())
 
-	s.router.POST("/api/v1/register", s.register)
-	s.router.POST("/api/v1/signin", s.login)
-	s.router.GET("/api/v1/me", s.me)
+	api := s.router.Group(fmt.Sprintf("/api/%s", ApiVersion))
 
-	s.router.GET("/api/v1/users/:id", s.getUserById)
-	s.router.POST("/api/v1/users/search", s.getUserByCredentials)
+	api.POST("/register", s.register)
+	api.POST("/signin", s.login)
+	api.GET("/me", s.me)
 
-	s.router.POST("/api/v1/create_tag", s.createTag)
-	s.router.GET("/api/v1/tags", s.getAllTags)
-	s.router.GET("/api/v1/tags/:id", s.getTagById)
+	api.GET("/users/:id", s.getUserById)
+	api.POST("/users/search", s.getUserByCredentials)
 
-	s.router.GET("/api/v1/sounds", s.getAllSounds)
-	s.router.GET("/api/v1/sounds/:id", s.getSoundById)
-	s.router.POST("/api/v1/create_sound", s.createSound)
-	s.router.GET("/api/v1/random", s.randomSounds)
+	api.POST("/create_tag", s.createTag)
+	api.GET("/tags", s.getAllTags)
+	api.GET("/tags/:id", s.getTagById)
 
-	s.router.POST("/api/v1/search", s.searchSounds)
+	api.GET("/sounds", s.getAllSounds)
+	api.GET("/sounds/:id", s.getSoundById)
+	api.POST("/create_sound", s.createSound)
+	api.GET("/random", s.randomSounds)
 
-	s.router.POST("/api/v1/upload_image", s.uploadImage)
-	s.router.POST("/api/v1/upload_sound", s.uploadSound)
+	api.POST("/search", s.searchSounds)
 
-	s.router.POST("/api/v1/add_favourite", s.addFavourite)
+	api.POST("/upload_image", s.uploadImage)
+	api.POST("/upload_sound", s.uploadSound)
+
+	api.POST("/add_favourite", s.addFavourite)
 }

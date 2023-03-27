@@ -1,6 +1,7 @@
-package http
+package v1
 
 const (
+	ApiVersion     string = "v1"
 	SuccessMessage string = "success"
 )
 
