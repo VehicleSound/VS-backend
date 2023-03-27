@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/interfaces"
 	"net/http"
@@ -20,6 +21,14 @@ type Server struct {
 	sound  interfaces.SoundController
 	file   interfaces.FileController
 	search interfaces.SearchController
+}
+
+func prometheusHandler() gin.HandlerFunc {
+	h := promhttp.Handler()
+
+	return func(ctx *gin.Context) {
+		h.ServeHTTP(ctx.Writer, ctx.Request)
+	}
 }
 
 func NewHttpServer(
@@ -59,6 +68,7 @@ func (s *Server) Run() error {
 func (s *Server) authMiddleware(ctx *gin.Context) {
 	excludedURIs := []string{
 		`^/assets`,
+		`^/metrics`,
 		`^/api/v1/random`,
 		`^/api/v1/search`,
 		`^/api/v1/sounds`,
@@ -110,8 +120,12 @@ func (s *Server) configureRouter() {
 	s.router.Use(s.corsMiddleware)
 	s.router.Use(s.authMiddleware)
 
+	// Static
 	s.router.Static("/assets/images", "./static/images")
 	s.router.Static("/assets/sounds", "./static/sounds")
+
+	// Metrics
+	s.router.GET("/metrics", prometheusHandler())
 
 	s.router.POST("/api/v1/register", s.register)
 	s.router.POST("/api/v1/signin", s.login)
