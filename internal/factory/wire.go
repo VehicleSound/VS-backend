@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/timickb/transport-sound/internal/config"
-	"github.com/timickb/transport-sound/internal/delivery/http"
+	"github.com/timickb/transport-sound/internal/delivery/http/v1"
 	"github.com/timickb/transport-sound/internal/infrastructure/controller"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository/postgres"
 	"github.com/timickb/transport-sound/internal/infrastructure/usecase/auth"
@@ -16,7 +16,7 @@ import (
 	"github.com/timickb/transport-sound/internal/interfaces"
 )
 
-func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*http.Server, error) {
+func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*v1.Server, error) {
 	connStr := fmt.Sprintf(
 		"host=%s user=%s dbname=%s sslmode=%s port=%d password=%s",
 		cfg.DbHost,
@@ -51,7 +51,7 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*htt
 	fileController := controller.NewFile(fileService)
 	searchController := controller.NewSearch(searchService)
 
-	return http.NewHttpServer(
+	return v1.NewHttpServer(
 		cfg,
 		authController,
 		userController,
