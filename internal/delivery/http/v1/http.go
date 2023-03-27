@@ -67,14 +67,12 @@ func (s *Server) Run() error {
 
 func (s *Server) authMiddleware(ctx *gin.Context) {
 	excludedURIs := []string{
-		`^/assets`,
-		`^/metrics`,
-		`^/api/v1/random`,
-		`^/api/v1/search`,
-		`^/api/v1/sounds`,
-		`^/api/v1/tags`,
-		`^/api/v1/register`,
-		`^/api/v1/signin`,
+		`^*/random`,
+		`^*/search`,
+		`^*/sounds`,
+		`^*/tags`,
+		`^*/register`,
+		`^*/signin`,
 	}
 
 	for _, uri := range excludedURIs {
@@ -119,15 +117,13 @@ func (s *Server) corsMiddleware(ctx *gin.Context) {
 }
 
 func (s *Server) configureRouter() {
-	s.router.Use(s.corsMiddleware)
-	s.router.Use(s.authMiddleware)
-
 	s.router.Static("/assets/images", "./static/images")
 	s.router.Static("/assets/sounds", "./static/sounds")
-
 	s.router.GET("/metrics", prometheusHandler())
 
 	api := s.router.Group(fmt.Sprintf("/api/%s", ApiVersion))
+	api.Use(s.corsMiddleware)
+	api.Use(s.authMiddleware)
 
 	api.POST("/register", s.register)
 	api.POST("/signin", s.login)
