@@ -127,24 +127,19 @@ func (s *Server) configureRouter() {
 
 	api.POST("/register", s.register)
 	api.POST("/signin", s.login)
-	api.GET("/me", s.me)
-
-	api.GET("/users/:id", s.getUserById)
 	api.POST("/users/search", s.getUserByCredentials)
-
 	api.POST("/create_tag", s.createTag)
-	api.GET("/tags", s.getAllTags)
-	api.GET("/tags/:id", s.getTagById)
-
-	api.GET("/sounds", s.getAllSounds)
-	api.GET("/sounds/:id", s.getSoundById)
 	api.POST("/create_sound", s.createSound)
-	api.GET("/random", s.randomSounds)
-
 	api.POST("/search", s.searchSounds)
-
 	api.POST("/upload_image", s.uploadImage)
 	api.POST("/upload_sound", s.uploadSound)
-
 	api.POST("/add_favourite", s.addFavourite)
+
+	api.GET("/me", s.me)
+	api.GET("/users/:id", s.getUserById)
+	api.GET("/tags", s.getAllTags)
+	api.GET("/tags/:id", s.getTagById)
+	api.GET("/sounds", s.getAllSounds)
+	api.GET("/sounds/:id", s.getSoundById)
+	api.GET("/random", s.randomSounds)
 }
