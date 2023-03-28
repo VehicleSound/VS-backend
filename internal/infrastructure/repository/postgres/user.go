@@ -3,7 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository"
 )
 

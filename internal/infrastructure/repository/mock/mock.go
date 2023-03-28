@@ -2,7 +2,7 @@ package mock
 
 import (
 	"github.com/google/uuid"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	domain2 "github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository/memory"
 )
 
@@ -21,12 +21,12 @@ func (r *Repository) CreateTestSounds(names []string) error {
 	}
 
 	for _, name := range names {
-		err := r.CreateSound(&domain.Sound{
+		err := r.CreateSound(&domain2.Sound{
 			Id:          uuid.NewString(),
 			Name:        name,
 			AuthorId:    authorId,
 			AuthorLogin: "test",
-			Tags:        make([]*domain.Tag, 0),
+			Tags:        make([]*domain2.Tag, 0),
 		})
 		if err != nil {
 			return err

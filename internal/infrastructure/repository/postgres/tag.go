@@ -3,7 +3,7 @@ package postgres
 import (
 	"errors"
 	"fmt"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/domain"
 )
 
 func (p PqRepository) CreateTag(tag domain.Tag) error {

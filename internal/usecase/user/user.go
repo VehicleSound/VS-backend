@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository"
-	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
-	"github.com/timickb/transport-sound/internal/infrastructure/usecase/utils"
 	"github.com/timickb/transport-sound/internal/interfaces"
+	"github.com/timickb/transport-sound/internal/usecase"
+	"github.com/timickb/transport-sound/internal/usecase/utils"
 	"time"
 )
 

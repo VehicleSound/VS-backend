@@ -2,8 +2,8 @@ package controller
 
 import (
 	"context"
-	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	dto2 "github.com/timickb/transport-sound/internal/controller/dto"
+	"github.com/timickb/transport-sound/internal/domain"
 )
 
 type TagUseCase interface {
@@ -21,25 +21,25 @@ func NewTag(u TagUseCase) *TagController {
 	return &TagController{u: u}
 }
 
-func (c *TagController) CreateTag(ctx context.Context, req *dto.CreateTagRequest) (*dto.CreateTagResponse, error) {
+func (c *TagController) CreateTag(ctx context.Context, req *dto2.CreateTagRequest) (*dto2.CreateTagResponse, error) {
 	tagId, err := c.u.CreateTag(req.Title)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.CreateTagResponse{TagId: tagId}, nil
+	return &dto2.CreateTagResponse{TagId: tagId}, nil
 }
 
-func (c *TagController) GetAllTags(context.Context) ([]*dto.TagResponse, error) {
+func (c *TagController) GetAllTags(context.Context) ([]*dto2.TagResponse, error) {
 	tags, err := c.u.GetAllTags()
 	if err != nil {
 		return nil, err
 	}
 
-	var response []*dto.TagResponse
+	var response []*dto2.TagResponse
 
 	for _, tag := range tags {
-		response = append(response, &dto.TagResponse{
+		response = append(response, &dto2.TagResponse{
 			Id:    tag.Id,
 			Title: tag.Title,
 		})
@@ -48,13 +48,13 @@ func (c *TagController) GetAllTags(context.Context) ([]*dto.TagResponse, error) 
 	return response, nil
 }
 
-func (c *TagController) GetTagById(ctx context.Context, id string) (*dto.TagResponse, error) {
+func (c *TagController) GetTagById(ctx context.Context, id string) (*dto2.TagResponse, error) {
 	tag, err := c.u.GetTagById(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &dto.TagResponse{
+	return &dto2.TagResponse{
 		Id:    tag.Id,
 		Title: tag.Title,
 	}, nil

@@ -3,8 +3,8 @@ package controller
 import (
 	"context"
 	"fmt"
-	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	dto2 "github.com/timickb/transport-sound/internal/controller/dto"
+	"github.com/timickb/transport-sound/internal/domain"
 )
 
 type UserUseCase interface {
@@ -26,7 +26,7 @@ func NewUser(u UserUseCase) *UserController {
 	return &UserController{u: u}
 }
 
-func (c *UserController) Register(ctx context.Context, req *dto.RegisterRequest) (*dto.RegisterResponse, error) {
+func (c *UserController) Register(ctx context.Context, req *dto2.RegisterRequest) (*dto2.RegisterResponse, error) {
 	if err := c.u.ValidateRegistration(req.Login, req.Email, req.Password); err != nil {
 		return nil, err
 	}
@@ -36,10 +36,10 @@ func (c *UserController) Register(ctx context.Context, req *dto.RegisterRequest)
 		return nil, err
 	}
 
-	return &dto.RegisterResponse{UserId: userId}, nil
+	return &dto2.RegisterResponse{UserId: userId}, nil
 }
 
-func (c *UserController) ChangeLogin(ctx context.Context, req *dto.ChangeLoginRequest) error {
+func (c *UserController) ChangeLogin(ctx context.Context, req *dto2.ChangeLoginRequest) error {
 	err := c.u.ChangeLogin(req.UserId, req.Login)
 	if err != nil {
 		return err
@@ -47,7 +47,7 @@ func (c *UserController) ChangeLogin(ctx context.Context, req *dto.ChangeLoginRe
 	return nil
 }
 
-func (c *UserController) ChangeEmail(ctx context.Context, req *dto.ChangeEmailRequest) error {
+func (c *UserController) ChangeEmail(ctx context.Context, req *dto2.ChangeEmailRequest) error {
 	err := c.u.ChangeEmail(req.UserId, req.Email)
 	if err != nil {
 		return err
@@ -55,7 +55,7 @@ func (c *UserController) ChangeEmail(ctx context.Context, req *dto.ChangeEmailRe
 	return nil
 }
 
-func (c *UserController) ChangePassword(ctx context.Context, req *dto.ChangePasswordRequest) error {
+func (c *UserController) ChangePassword(ctx context.Context, req *dto2.ChangePasswordRequest) error {
 	err := c.u.ChangePassword(req.UserId, req.OldPassword, req.NewPassword)
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func (c *UserController) ChangePassword(ctx context.Context, req *dto.ChangePass
 	return nil
 }
 
-func (c *UserController) GetUserById(ctx context.Context, id string) (*dto.GetUserResponse, error) {
+func (c *UserController) GetUserById(ctx context.Context, id string) (*dto2.GetUserResponse, error) {
 	user, err := c.u.GetUserByLoginOrEmailOrId(id)
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func (c *UserController) GetUserById(ctx context.Context, id string) (*dto.GetUs
 	return c.mapUser(user), nil
 }
 
-func (c *UserController) GetUser(ctx context.Context, req *dto.GetUserRequest) (*dto.GetUserResponse, error) {
+func (c *UserController) GetUser(ctx context.Context, req *dto2.GetUserRequest) (*dto2.GetUserResponse, error) {
 	if req.Login != "" {
 		user, err := c.u.GetUserByLoginOrEmailOrId(req.Login)
 		if err != nil {
@@ -94,7 +94,7 @@ func (c *UserController) GetUser(ctx context.Context, req *dto.GetUserRequest) (
 	return nil, fmt.Errorf("err get user: wrong credentials")
 }
 
-func (c *UserController) AddToFav(ctx context.Context, req *dto.AddToFavRequest) error {
+func (c *UserController) AddToFav(ctx context.Context, req *dto2.AddToFavRequest) error {
 	if err := c.u.AddToFav(req.UserId, req.SoundId); err != nil {
 		return err
 	}
@@ -102,8 +102,8 @@ func (c *UserController) AddToFav(ctx context.Context, req *dto.AddToFavRequest)
 	return nil
 }
 
-func (c *UserController) mapUser(user *domain.User) *dto.GetUserResponse {
-	return &dto.GetUserResponse{
+func (c *UserController) mapUser(user *domain.User) *dto2.GetUserResponse {
+	return &dto2.GetUserResponse{
 		Id:        user.Id,
 		Login:     user.Login,
 		Email:     user.Email,

@@ -2,8 +2,8 @@ package controller
 
 import (
 	"context"
-	"github.com/timickb/transport-sound/internal/infrastructure/controller/dto"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	dto2 "github.com/timickb/transport-sound/internal/controller/dto"
+	"github.com/timickb/transport-sound/internal/domain"
 )
 
 type SoundUseCase interface {
@@ -21,28 +21,28 @@ func NewSound(u SoundUseCase) *SoundController {
 	return &SoundController{u: u}
 }
 
-func (c *SoundController) GetAllSounds(context.Context) ([]*dto.SoundResponse, error) {
+func (c *SoundController) GetAllSounds(context.Context) ([]*dto2.SoundResponse, error) {
 	sounds, err := c.u.GetAllSounds()
 	if err != nil {
 		return nil, err
 	}
 
-	resp := make([]*dto.SoundResponse, len(sounds))
+	resp := make([]*dto2.SoundResponse, len(sounds))
 	for i, s := range sounds {
-		resp[i] = dto.MapSound(s)
+		resp[i] = dto2.MapSound(s)
 	}
 	return resp, nil
 }
 
-func (c *SoundController) GetSoundById(ctx context.Context, id string) (*dto.SoundResponse, error) {
+func (c *SoundController) GetSoundById(ctx context.Context, id string) (*dto2.SoundResponse, error) {
 	sound, err := c.u.GetSoundById(id)
 	if err != nil {
 		return nil, err
 	}
-	return dto.MapSound(sound), nil
+	return dto2.MapSound(sound), nil
 }
 
-func (c *SoundController) CreateSound(ctx context.Context, t *dto.TokenResponse, req *dto.CreateSoundRequest) (*dto.CreateSoundResponse, error) {
+func (c *SoundController) CreateSound(ctx context.Context, t *dto2.TokenResponse, req *dto2.CreateSoundRequest) (*dto2.CreateSoundResponse, error) {
 	sound := &domain.Sound{
 		Name:          req.Name,
 		Description:   req.Description,
@@ -57,18 +57,18 @@ func (c *SoundController) CreateSound(ctx context.Context, t *dto.TokenResponse,
 		return nil, err
 	}
 
-	return &dto.CreateSoundResponse{SoundId: id}, nil
+	return &dto2.CreateSoundResponse{SoundId: id}, nil
 }
 
-func (c *SoundController) GetRandomSounds(ctx context.Context, limit int) ([]*dto.SoundResponse, error) {
+func (c *SoundController) GetRandomSounds(ctx context.Context, limit int) ([]*dto2.SoundResponse, error) {
 	sounds, err := c.u.GetRandomSounds(limit)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := make([]*dto.SoundResponse, len(sounds))
+	resp := make([]*dto2.SoundResponse, len(sounds))
 	for i, s := range sounds {
-		resp[i] = dto.MapSound(s)
+		resp[i] = dto2.MapSound(s)
 	}
 	return resp, nil
 }

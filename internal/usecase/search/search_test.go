@@ -3,7 +3,7 @@ package search
 import (
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	domain2 "github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository/memory"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository/mock"
 	"testing"
@@ -76,7 +76,7 @@ func TestSearchByTags(t *testing.T) {
 
 	// prepare tags
 	tagIds := []string{"1", "2", "3"}
-	tags := []*domain.Tag{
+	tags := []*domain2.Tag{
 		{
 			Id:    tagIds[0],
 			Title: "tag1",
@@ -95,31 +95,31 @@ func TestSearchByTags(t *testing.T) {
 	sid2 := uuid.NewString()
 	sid3 := uuid.NewString()
 
-	err = r.CreateSound(&domain.Sound{
+	err = r.CreateSound(&domain2.Sound{
 		Id:       sid1,
 		Name:     "test sound",
 		AuthorId: uid,
-		Tags:     []*domain.Tag{tags[0], tags[1]},
+		Tags:     []*domain2.Tag{tags[0], tags[1]},
 	})
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = r.CreateSound(&domain.Sound{
+	err = r.CreateSound(&domain2.Sound{
 		Id:       sid2,
 		Name:     "test sound 2",
 		AuthorId: uid,
-		Tags:     []*domain.Tag{tags[1], tags[2]},
+		Tags:     []*domain2.Tag{tags[1], tags[2]},
 	})
 	if err != nil {
 		t.Error(err)
 	}
 
-	err = r.CreateSound(&domain.Sound{
+	err = r.CreateSound(&domain2.Sound{
 		Id:       sid3,
 		Name:     "test sound 3",
 		AuthorId: uid,
-		Tags:     []*domain.Tag{tags[0], tags[2]},
+		Tags:     []*domain2.Tag{tags[0], tags[2]},
 	})
 	if err != nil {
 		t.Error(err)
