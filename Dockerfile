@@ -4,7 +4,7 @@ WORKDIR /usr/local/go/src/
 
 ADD ./ /usr/local/go/src/
 
-RUN go clean --modcache
+RUN go mod download
 RUN go build -mod=readonly -o app cmd/main.go
 
 FROM alpine:latest
