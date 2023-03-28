@@ -1,8 +1,9 @@
 .idea/
 .postgres_data/
+.grafana_data/
 *.log
 *.tmp
-go.sum
+DS_Store
 
 build/
 out/
