@@ -3,7 +3,6 @@ package v1
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/interfaces"
 	"net/http"
@@ -12,8 +11,9 @@ import (
 )
 
 type Server struct {
-	router *gin.Engine
-	config *config.AppConfig
+	router  *gin.Engine
+	config  *config.AppConfig
+	metrics interfaces.Metrics
 
 	auth   interfaces.AuthController
 	user   interfaces.UserController
@@ -23,16 +23,9 @@ type Server struct {
 	search interfaces.SearchController
 }
 
-func prometheusHandler() gin.HandlerFunc {
-	h := promhttp.Handler()
-
-	return func(ctx *gin.Context) {
-		h.ServeHTTP(ctx.Writer, ctx.Request)
-	}
-}
-
 func NewHttpServer(
 	config *config.AppConfig,
+	metrics interfaces.Metrics,
 	auth interfaces.AuthController,
 	user interfaces.UserController,
 	tag interfaces.TagController,
@@ -41,14 +34,15 @@ func NewHttpServer(
 	search interfaces.SearchController) *Server {
 
 	s := &Server{
-		router: gin.Default(),
-		config: config,
-		auth:   auth,
-		user:   user,
-		tag:    tag,
-		sound:  sound,
-		file:   file,
-		search: search,
+		router:  gin.Default(),
+		metrics: metrics,
+		config:  config,
+		auth:    auth,
+		user:    user,
+		tag:     tag,
+		sound:   sound,
+		file:    file,
+		search:  search,
 	}
 
 	s.configureRouter()
@@ -57,11 +51,9 @@ func NewHttpServer(
 
 func (s *Server) Run() error {
 	err := s.router.Run(fmt.Sprintf(":%d", s.config.AppPort))
-
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -119,7 +111,6 @@ func (s *Server) corsMiddleware(ctx *gin.Context) {
 func (s *Server) configureRouter() {
 	s.router.Static("/assets/images", "./static/images")
 	s.router.Static("/assets/sounds", "./static/sounds")
-	s.router.GET("/metrics", prometheusHandler())
 
 	api := s.router.Group(fmt.Sprintf("/api/%s", ApiVersion))
 	api.Use(s.corsMiddleware)
@@ -142,4 +133,8 @@ func (s *Server) configureRouter() {
 	api.GET("/sounds", s.getAllSounds)
 	api.GET("/sounds/:id", s.getSoundById)
 	api.GET("/random", s.randomSounds)
+}
+
+func (s *Server) ping(ctx *gin.Context) {
+	ctx.Data(200, "text/plain", []byte("Pong"))
 }

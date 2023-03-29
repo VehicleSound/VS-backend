@@ -2,12 +2,14 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/timickb/transport-sound/internal/config"
 	"github.com/timickb/transport-sound/internal/factory"
 	"github.com/timickb/transport-sound/internal/interfaces"
+	"github.com/timickb/transport-sound/internal/metrics"
 	"os"
 	"strconv"
 )
@@ -34,16 +36,26 @@ func mainNoExit(logger interfaces.Logger) error {
 	}
 
 	logger.Info("Config parsed: ", cfg)
+
+	mts := metrics.New(logger, cfg.AppMetricsPort)
+
+	go func() {
+		logger.Info(fmt.Sprintf("Starting metrics listener on port %d", cfg.AppMetricsPort))
+		if err := mts.Listen(); err != nil {
+			logger.Fatal(err)
+		}
+	}()
+
 	logger.Info("Initializing http server")
 
-	srv, err := factory.InitializeHttpServer(cfg, logger)
+	srv, err := factory.InitializeHttpServer(cfg, logger, mts)
 	if err != nil {
 		return err
 	}
 
-	logger.Info("Starting http server")
+	logger.Info(fmt.Sprintf("Starting http server on port %d", cfg.AppPort))
 	if err := srv.Run(); err != nil {
-		return err
+		logger.Fatal(err)
 	}
 
 	return nil
@@ -70,6 +82,9 @@ func parseConfigFromEnvironment(cfg *config.AppConfig) {
 	}
 	if os.Getenv("APP_PORT") != "" {
 		cfg.AppPort, _ = strconv.Atoi(os.Getenv("APP_PORT"))
+	}
+	if os.Getenv("APP_METRICS_PORT") != "" {
+		cfg.AppMetricsPort, _ = strconv.Atoi(os.Getenv("APP_METRICS_PORT"))
 	}
 	if os.Getenv("MAX_PICTURE_SIZE") != "" {
 		cfg.MaxPictureSize, _ = strconv.Atoi(os.Getenv("MAX_PICTURE_SIZE"))

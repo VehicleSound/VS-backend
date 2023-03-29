@@ -58,6 +58,7 @@ func (s *Server) register(ctx *gin.Context) {
 		Message: SuccessMessage,
 		Data:    resp,
 	})
+	s.metrics.AddNewUser()
 }
 
 func (s *Server) createTag(ctx *gin.Context) {

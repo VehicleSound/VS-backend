@@ -16,7 +16,7 @@ import (
 	"github.com/timickb/transport-sound/internal/usecase/user"
 )
 
-func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*v1.Server, error) {
+func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger, metrics interfaces.Metrics) (*v1.Server, error) {
 	connStr := fmt.Sprintf(
 		"host=%s user=%s dbname=%s sslmode=%s port=%d password=%s",
 		cfg.DbHost,
@@ -53,6 +53,7 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger) (*v1.
 
 	return v1.NewHttpServer(
 		cfg,
+		metrics,
 		authController,
 		userController,
 		tagController,

@@ -44,6 +44,7 @@ services:
     tty: true
     ports:
       - "${APP_PORT}:${APP_PORT}"
+      - "${APP_METRICS_PORT}:${APP_METRICS_PORT}"
     restart: always
     depends_on:
       - db
@@ -58,4 +59,5 @@ services:
       - MAX_SOUND_SIZE=${MAX_SOUND_SIZE}
       - MAX_PICTURE_SIZE=${MAX_PICTURE_SIZE}
       - APP_PORT=${APP_PORT}
+      - APP_METRICS_PORT=${APP_METRICS_PORT}
 

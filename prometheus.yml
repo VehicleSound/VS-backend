@@ -1,8 +1,14 @@
 scrape_configs:
-  - job_name: 'dummy'
-    scrape_interval: 5s
+  - job_name: 'service'
+    scrape_interval: 15s
 
     static_configs:
       - targets:
-          - 'service:8080'
+          - 'service:8081'
+
+  - job_name: 'prometheus'
+    scrape_interval: 15s
+
+    static_configs:
+      - targets:
           - 'prometheus:9090'
