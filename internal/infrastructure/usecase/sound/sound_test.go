@@ -11,7 +11,14 @@ import (
 func TestCreateSoundWithoutTags(t *testing.T) {
 	r := memory.NewRepository()
 
-	uid, err := r.CreateUser("login", "email", "pwd_hash")
+	user := domain.User{
+		Id:           uuid.NewString(),
+		Login:        "login",
+		Email:        "email",
+		PasswordHash: "pwd_hash",
+	}
+
+	err := r.CreateUser(user)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,7 +36,7 @@ func TestCreateSoundWithoutTags(t *testing.T) {
 		Id:            uuid.NewString(),
 		Name:          "sound",
 		Description:   "desc",
-		AuthorId:      uid,
+		AuthorId:      user.Id,
 		PictureFileId: "1",
 		SoundFileId:   "2",
 	}

@@ -16,7 +16,7 @@ func TestSignIn(t *testing.T) {
 	pwd := "password"
 	pwdHash := fmt.Sprintf("%x", sha256.Sum256([]byte(pwd)))
 
-	user := &domain.User{
+	user := domain.User{
 		Id:           uuid.NewString(),
 		Login:        "test_user",
 		Email:        "test@example.com",
@@ -29,7 +29,7 @@ func TestSignIn(t *testing.T) {
 	secret := "jwt_secret"
 
 	r := memory.NewRepository()
-	if _, err := r.CreateUser(user.Login, user.Email, user.PasswordHash); err != nil {
+	if err := r.CreateUser(user); err != nil {
 		t.Fatal(err)
 	}
 
@@ -44,13 +44,13 @@ func TestSignIn(t *testing.T) {
 	// sign in with wrong password
 	_, err = authService.SignIn(user.Email, "", secret)
 	if err == nil {
-		t.Fatal("expected wrong password error")
+		t.Fatal("expected wrong password srverrors")
 	}
 
 	// sign in with wrong email
 	_, err = authService.SignIn("bread", pwd, secret)
 	if err == nil {
-		t.Fatal("expected user not found error")
+		t.Fatal("expected user not found srverrors")
 	}
 }
 
