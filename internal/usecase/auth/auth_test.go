@@ -6,7 +6,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository/memory"
 	"testing"
 	"time"

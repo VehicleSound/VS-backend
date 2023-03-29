@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/mitchellh/mapstructure"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
-	"github.com/timickb/transport-sound/internal/infrastructure/usecase"
+	"github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/interfaces"
+	"github.com/timickb/transport-sound/internal/usecase"
 	"time"
 )
 

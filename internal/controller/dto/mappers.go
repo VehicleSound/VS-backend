@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	"github.com/timickb/transport-sound/internal/domain"
 )
 
 func MapSound(s *domain.Sound) *SoundResponse {

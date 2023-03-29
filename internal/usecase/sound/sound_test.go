@@ -3,7 +3,7 @@ package sound
 import (
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
-	"github.com/timickb/transport-sound/internal/infrastructure/domain"
+	domain2 "github.com/timickb/transport-sound/internal/domain"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository/memory"
 	"testing"
 )
@@ -11,7 +11,7 @@ import (
 func TestCreateSoundWithoutTags(t *testing.T) {
 	r := memory.NewRepository()
 
-	user := domain.User{
+	user := domain2.User{
 		Id:           uuid.NewString(),
 		Login:        "login",
 		Email:        "email",
@@ -32,7 +32,7 @@ func TestCreateSoundWithoutTags(t *testing.T) {
 
 	soundService := New(r, logrus.New())
 
-	sound := &domain.Sound{
+	sound := &domain2.Sound{
 		Id:            uuid.NewString(),
 		Name:          "sound",
 		Description:   "desc",
