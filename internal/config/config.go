@@ -15,10 +15,10 @@ type kafka struct {
 }
 
 type AppConfig struct {
-	AppPort        int    `json:"app_port,omitempty"`
-	AppMetricsPort int    `json:"metrics_port,omitempty"`
 	ServerMode     string `json:"server_mode,omitempty"`
 	JwtSecret      string `json:"jwt_secret,omitempty"`
+	AppPort        int    `json:"app_port,omitempty"`
+	AppMetricsPort int    `json:"metrics_port,omitempty"`
 	MaxSoundSize   int    `json:"max_sound_size,omitempty"`
 	MaxPictureSize int    `json:"max_picture_size,omitempty"`
 
