@@ -25,7 +25,7 @@ func main() {
 
 func mainNoExit(logger interfaces.Logger) error {
 	cfg := config.NewDefault()
-	parseConfigFromEnvironment(cfg)
+	fillConfigFromEnv(cfg)
 
 	if cfg.ServerMode == "debug" {
 		gin.SetMode(gin.DebugMode)
@@ -61,24 +61,24 @@ func mainNoExit(logger interfaces.Logger) error {
 	return nil
 }
 
-func parseConfigFromEnvironment(cfg *config.AppConfig) {
+func fillConfigFromEnv(cfg *config.AppConfig) {
 	if os.Getenv("DB_HOST") != "" {
-		cfg.DbHost = os.Getenv("DB_HOST")
+		cfg.Postgres.Host = os.Getenv("DB_HOST")
 	}
 	if os.Getenv("DB_USER") != "" {
-		cfg.DbUser = os.Getenv("DB_USER")
+		cfg.Postgres.User = os.Getenv("DB_USER")
 	}
 	if os.Getenv("DB_NAME") != "" {
-		cfg.DbName = os.Getenv("DB_NAME")
+		cfg.Postgres.Name = os.Getenv("DB_NAME")
 	}
 	if os.Getenv("DB_PASSWORD") != "" {
-		cfg.DbPassword = os.Getenv("DB_PASSWORD")
+		cfg.Postgres.Password = os.Getenv("DB_PASSWORD")
 	}
 	if os.Getenv("JWT_SECRET") != "" {
 		cfg.JwtSecret = os.Getenv("JWT_SECRET")
 	}
 	if os.Getenv("DB_PORT") != "" {
-		cfg.DbPort, _ = strconv.Atoi(os.Getenv("DB_PORT"))
+		cfg.Postgres.Port, _ = strconv.Atoi(os.Getenv("DB_PORT"))
 	}
 	if os.Getenv("APP_PORT") != "" {
 		cfg.AppPort, _ = strconv.Atoi(os.Getenv("APP_PORT"))
@@ -94,5 +94,11 @@ func parseConfigFromEnvironment(cfg *config.AppConfig) {
 	}
 	if os.Getenv("SERVER_MODE") != "" {
 		cfg.ServerMode = os.Getenv("SERVER_MODE")
+	}
+	if os.Getenv("KAFKA_HOST") != "" {
+		cfg.Kafka.Host = os.Getenv("KAFKA_HOST")
+	}
+	if os.Getenv("KAFKA_PORT") != "" {
+		cfg.Kafka.Port, _ = strconv.Atoi(os.Getenv("KAFKA_PORT"))
 	}
 }
