@@ -112,6 +112,8 @@ func (s *Server) configureRouter() {
 	s.router.Static("/assets/images", "./static/images")
 	s.router.Static("/assets/sounds", "./static/sounds")
 
+	s.router.POST("/ping", s.ping)
+
 	api := s.router.Group(fmt.Sprintf("/api/%s", ApiVersion))
 	api.Use(s.corsMiddleware)
 	api.Use(s.authMiddleware)

@@ -3,12 +3,12 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	dto2 "github.com/timickb/transport-sound/internal/controller/dto"
+	"github.com/timickb/transport-sound/internal/controller/dto"
 	"net/http"
 )
 
 func (s *Server) login(ctx *gin.Context) {
-	req := dto2.AuthRequest{}
+	req := dto.AuthRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
@@ -34,7 +34,7 @@ func (s *Server) login(ctx *gin.Context) {
 }
 
 func (s *Server) register(ctx *gin.Context) {
-	req := dto2.RegisterRequest{}
+	req := dto.RegisterRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
@@ -62,7 +62,7 @@ func (s *Server) register(ctx *gin.Context) {
 }
 
 func (s *Server) createTag(ctx *gin.Context) {
-	req := dto2.CreateTagRequest{}
+	req := dto.CreateTagRequest{}
 
 	if err := ctx.ShouldBindBodyWith(&req, binding.JSON); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
@@ -163,7 +163,7 @@ func (s *Server) getSoundById(ctx *gin.Context) {
 }
 
 func (s *Server) uploadImage(ctx *gin.Context) {
-	req := &dto2.UploadFileRequest{}
+	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
 			Code:    http.StatusBadRequest,
@@ -189,7 +189,7 @@ func (s *Server) uploadImage(ctx *gin.Context) {
 }
 
 func (s *Server) uploadSound(ctx *gin.Context) {
-	req := &dto2.UploadFileRequest{}
+	req := &dto.UploadFileRequest{}
 	if err := ctx.ShouldBind(req); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
 			Code:    http.StatusBadRequest,
@@ -214,7 +214,7 @@ func (s *Server) uploadSound(ctx *gin.Context) {
 }
 
 func (s *Server) createSound(ctx *gin.Context) {
-	req := &dto2.CreateSoundRequest{}
+	req := &dto.CreateSoundRequest{}
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
 			Code:    http.StatusBadRequest,
@@ -257,7 +257,7 @@ func (s *Server) getUserById(ctx *gin.Context) {
 }
 
 func (s *Server) getUserByCredentials(ctx *gin.Context) {
-	req := &dto2.GetUserRequest{}
+	req := &dto.GetUserRequest{}
 
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
@@ -282,7 +282,7 @@ func (s *Server) getUserByCredentials(ctx *gin.Context) {
 }
 
 func (s *Server) searchSounds(ctx *gin.Context) {
-	req := &dto2.SearchRequest{}
+	req := &dto.SearchRequest{}
 
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
@@ -335,12 +335,12 @@ func (s *Server) me(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, Response{
 		Code:    http.StatusOK,
 		Message: SuccessMessage,
-		Data:    resp.(*dto2.TokenResponse),
+		Data:    resp.(*dto.TokenResponse),
 	})
 }
 
 func (s *Server) addFavourite(ctx *gin.Context) {
-	req := &dto2.AddToFavRequest{}
+	req := &dto.AddToFavRequest{}
 
 	if err := ctx.ShouldBindBodyWith(req, binding.JSON); err != nil {
 		ctx.IndentedJSON(http.StatusBadRequest, Response{
