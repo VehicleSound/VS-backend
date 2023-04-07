@@ -39,31 +39,6 @@ services:
     ports:
       - "9090:9090"
 
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.2
-    container_name: zookeeper
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  kafka:
-    image: confluentinc/cp-kafka:7.3.2
-    container_name: kafka
-    ports:
-      - "${KAFKA_PORT}:${KAFKA_PORT}"
-    depends_on:
-      - zookeeper
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,INTERNAL://:${KAFKA_PORT}
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://${KAFKA_HOST}:${KAFKA_PORT},EXTERNAL_SAME_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
   service:
     build: .
     tty: true
@@ -74,7 +49,6 @@ services:
     depends_on:
       - db
       - migrate
-      - kafka
     environment:
       - DB_NAME=${DB_NAME}
       - DB_HOST=${DB_HOST}
@@ -86,6 +60,4 @@ services:
       - MAX_PICTURE_SIZE=${MAX_PICTURE_SIZE}
       - APP_PORT=${APP_PORT}
       - APP_METRICS_PORT=${APP_METRICS_PORT}
-      - KAFKA_HOST=${KAFKA_HOST}
-      - KAFKA_PORT=${KAFKA_PORT}
 
