@@ -1,36 +1,13 @@
 package utils
 
-import (
-	"github.com/timickb/transport-sound/internal/usecase"
-	"regexp"
-)
+import "regexp"
 
 func ValidateLogin(login string) bool {
-	return len(login) >= usecase.MinLoginLen && len(login) <= usecase.MaxLoginLen
+	return len(login) >= 3
 }
 
 func ValidatePassword(password string) bool {
-	if len(password) < usecase.MinPasswordLen || len(password) > usecase.MaxPasswordLen {
-		return false
-	}
-
-	digitRegex := regexp.MustCompile("[0-9]")
-	upperCaseRegex := regexp.MustCompile("[A-Z]")
-	lowerCaseRegex := regexp.MustCompile("[a-z]")
-
-	if !digitRegex.MatchString(password) {
-		return false
-	}
-
-	if !upperCaseRegex.MatchString(password) {
-		return false
-	}
-
-	if !lowerCaseRegex.MatchString(password) {
-		return false
-	}
-
-	return true
+	return len(password) >= 3
 }
 
 func ValidateEmail(email string) bool {
