@@ -14,6 +14,13 @@ type kafka struct {
 	Port int    `json:"port,omitempty"`
 }
 
+type minio struct {
+	Endpoint  string `json:"endpoint,omitempty"`
+	AccessKey string `json:"access_key,omitempty"`
+	SecretKey string `json:"secret_key,omitempty"`
+	Secure    bool   `json:"secure,omitempty"`
+}
+
 type AppConfig struct {
 	ServerMode     string `json:"server_mode,omitempty"`
 	JwtSecret      string `json:"jwt_secret,omitempty"`
@@ -24,6 +31,7 @@ type AppConfig struct {
 
 	Postgres postgres `json:"postgres,omitempty"`
 	Kafka    kafka    `json:"kafka,omitempty"`
+	Minio    minio    `json:"minio,omitempty"`
 }
 
 func NewDefault() *AppConfig {
@@ -45,6 +53,12 @@ func NewDefault() *AppConfig {
 		Kafka: kafka{
 			Host: "localhost",
 			Port: 9092,
+		},
+		Minio: minio{
+			Endpoint:  "minio:9000",
+			AccessKey: "root123",
+			SecretKey: "root123admin",
+			Secure:    false,
 		},
 	}
 }

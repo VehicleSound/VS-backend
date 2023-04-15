@@ -26,7 +26,7 @@ func New(r usecase.Repository, log interfaces.Logger, maxFileSize int) *UseCase 
 	return &UseCase{r: r, log: log, maxFileSize: maxFileSize}
 }
 
-func (u *UseCase) UploadImage(savePath string, fh *multipart.FileHeader) (string, error) {
+func (u *UseCase) UploadImage(fh *multipart.FileHeader) (string, error) {
 	ext := strings.ToLower(filepath.Ext(fh.Filename))
 
 	if !u.checkImageExt(ext) {
@@ -54,7 +54,7 @@ func (u *UseCase) UploadImage(savePath string, fh *multipart.FileHeader) (string
 	}
 
 	id := uuid.NewString()
-	if err := converter.HandleAndSaveImage(savePath, id, image); err != nil {
+	if err := converter.HandleAndSaveImage("static/images/", id, image); err != nil {
 		return "", fmt.Errorf("err upload image: %w", err)
 	}
 
@@ -65,7 +65,7 @@ func (u *UseCase) UploadImage(savePath string, fh *multipart.FileHeader) (string
 	return id, nil
 }
 
-func (u *UseCase) UploadSound(savePath string, fh *multipart.FileHeader) (string, error) {
+func (u *UseCase) UploadSound(fh *multipart.FileHeader) (string, error) {
 	ext := strings.ToLower(filepath.Ext(fh.Filename))
 	if !u.checkSoundExt(ext) {
 		return "", errors.New("invalid sound extension")
@@ -77,7 +77,7 @@ func (u *UseCase) UploadSound(savePath string, fh *multipart.FileHeader) (string
 	}
 	defer file.Close()
 
-	id, err := u.uploadFile(&file, savePath, ext)
+	id, err := u.uploadFile(&file, "static/sounds/", ext)
 	if err != nil {
 		return "", fmt.Errorf("err upload sound: %w", err)
 	}

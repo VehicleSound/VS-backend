@@ -7,6 +7,7 @@ import (
 	"github.com/timickb/transport-sound/internal/controller"
 	"github.com/timickb/transport-sound/internal/delivery/http/v1"
 	"github.com/timickb/transport-sound/internal/infrastructure/repository/postgres"
+	"github.com/timickb/transport-sound/internal/infrastructure/storage"
 	"github.com/timickb/transport-sound/internal/interfaces"
 	"github.com/timickb/transport-sound/internal/usecase/auth"
 	"github.com/timickb/transport-sound/internal/usecase/file"
@@ -26,6 +27,7 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger, metri
 		cfg.Postgres.Port,
 		cfg.Postgres.Password)
 
+	// Init postgres
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, err
@@ -35,13 +37,19 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger, metri
 		return nil, err
 	}
 
+	// Init minio
+	store, err := storage.New(logger, cfg.Minio.Endpoint, cfg.Minio.AccessKey, cfg.Minio.SecretKey)
+	if err != nil {
+		return nil, err
+	}
+
 	repo := postgres.NewPqRepository(db)
 
 	userService := user.New(repo, logger)
 	authService := auth.New(repo, logger)
 	tagService := tag.New(repo, logger)
 	soundService := sound.New(repo, logger)
-	fileService := file.New(repo, logger, cfg.MaxSoundSize)
+	fileService := file.New(repo, store)
 	searchService := search.New(repo, logger)
 
 	authController := controller.NewAuth(authService, cfg.JwtSecret)

@@ -1,6 +1,9 @@
 .idea/
+
 .postgres_data/
 .grafana_data/
+.minio_data
+
 *.log
 *.tmp
 DS_Store
