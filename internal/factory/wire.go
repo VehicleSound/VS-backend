@@ -38,7 +38,13 @@ func InitializeHttpServer(cfg *config.AppConfig, logger interfaces.Logger, metri
 	}
 
 	// Init minio
-	store, err := storage.New(logger, cfg.Minio.Endpoint, cfg.Minio.AccessKey, cfg.Minio.SecretKey)
+	store, err := storage.New(logger, storage.Params{
+		Endpoint:        cfg.Minio.Endpoint,
+		AccessKey:       cfg.Minio.AccessKey,
+		SecretKey:       cfg.Minio.SecretKey,
+		RequiredBuckets: []string{"images", "sounds"},
+	})
+
 	if err != nil {
 		return nil, err
 	}
