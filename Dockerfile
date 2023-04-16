@@ -10,9 +10,6 @@ RUN go build -mod=readonly -o app cmd/main.go
 FROM alpine:latest
 
 COPY --from=builder /usr/local/go/src/app /
-RUN mkdir /static
-RUN mkdir /static/images
-RUN mkdir /static/sounds
 
 EXPOSE ${APP_PORT}
 CMD ["/app"]
