@@ -21,6 +21,12 @@ type UploadFileResponse struct {
 	FileId string `json:"file_id,omitempty"`
 }
 
+type GetFileResponse struct {
+	MimeType string
+	Bytes    []byte
+	Size     int64
+}
+
 type CreateSoundResponse struct {
 	SoundId string `json:"sound_id,omitempty"`
 }

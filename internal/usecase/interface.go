@@ -28,7 +28,8 @@ type Repository interface {
 	GetSoundsByTagId(tagId string) ([]*domain.Sound, error)
 	GetSoundsByVehicleId(vehicleId string) ([]*domain.Sound, error)
 
-	CreateFile(id, ext string) error
+	CreateFile(id, ext, sum string) error
+	GetFileIdBySum(sum string) (string, error)
 	GetFileExtById(id string) (string, error)
 
 	AddFavourite(userId, soundId string) error

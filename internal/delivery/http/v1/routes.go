@@ -363,3 +363,41 @@ func (s *Server) addFavourite(ctx *gin.Context) {
 		Message: SuccessMessage,
 	})
 }
+
+func (s *Server) getImage(ctx *gin.Context) {
+	fileId := ctx.Param("id")
+
+	result, err := s.file.GetImage(ctx, &dto.GetFileRequest{FileId: fileId})
+	if err != nil {
+		ctx.IndentedJSON(http.StatusBadRequest, Response{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, Response{
+		Code:    http.StatusOK,
+		Message: "Ok",
+		Data:    result,
+	})
+}
+
+func (s *Server) getSound(ctx *gin.Context) {
+	fileId := ctx.Param("id")
+
+	result, err := s.file.GetSound(ctx, &dto.GetFileRequest{FileId: fileId})
+	if err != nil {
+		ctx.IndentedJSON(http.StatusBadRequest, Response{
+			Code:    http.StatusBadRequest,
+			Message: err.Error(),
+		})
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, Response{
+		Code:    http.StatusOK,
+		Message: "Ok",
+		Data:    result,
+	})
+}

@@ -52,6 +52,10 @@ type GetUserRequest struct {
 	Email string `json:"email"`
 }
 
+type GetFileRequest struct {
+	FileId string `json:"file_id,omitempty"`
+}
+
 type SearchRequest struct {
 	Name       string   `json:"name"`
 	TagIds     []string `json:"tag_ids"`

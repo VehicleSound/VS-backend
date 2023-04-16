@@ -109,9 +109,6 @@ func (s *Server) corsMiddleware(ctx *gin.Context) {
 }
 
 func (s *Server) configureRouter() {
-	s.router.Static("/assets/images", "./static/images")
-	s.router.Static("/assets/sounds", "./static/sounds")
-
 	s.router.POST("/ping", s.ping)
 
 	api := s.router.Group(fmt.Sprintf("/api/%s", ApiVersion))
@@ -135,6 +132,9 @@ func (s *Server) configureRouter() {
 	api.GET("/sounds", s.getAllSounds)
 	api.GET("/sounds/:id", s.getSoundById)
 	api.GET("/random", s.randomSounds)
+
+	api.GET("/files/images/:id", s.getImage)
+	api.GET("/files/sounds/:id", s.getSound)
 }
 
 func (s *Server) ping(ctx *gin.Context) {

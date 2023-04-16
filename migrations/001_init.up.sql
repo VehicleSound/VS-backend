@@ -45,7 +45,8 @@ create table files
         constraint files_pk
             primary key,
     ext     varchar,
-    created timestamp default now()
+    created timestamp default now(),
+    sum     varchar
 );
 
 create table sounds

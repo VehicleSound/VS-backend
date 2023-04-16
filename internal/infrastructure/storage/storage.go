@@ -42,7 +42,7 @@ func (s *Storage) CreateFile(bucket string, file *domain.File) error {
 }
 
 func (s *Storage) DeleteFile(bucket, filename string) error {
-	s.log.Info("remove minio object in bucket", bucket, "with name", filename)
+	s.log.Info("remove minio object in bucket ", bucket, " with name ", filename)
 
 	if err := s.client.RemoveObject(bucket, filename); err != nil {
 		return fmt.Errorf("err remove minio object: %w", err)
@@ -52,7 +52,7 @@ func (s *Storage) DeleteFile(bucket, filename string) error {
 }
 
 func (s *Storage) GetFile(bucket, filename string) (*domain.File, error) {
-	s.log.Info("get minio object in bucket", bucket, "with name", filename)
+	s.log.Info("get minio object in bucket ", bucket, " with name ", filename)
 
 	obj, err := s.client.GetObject(bucket, filename, minio.GetObjectOptions{})
 	if err != nil {

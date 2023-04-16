@@ -27,6 +27,8 @@ type TagController interface {
 type FileController interface {
 	UploadImage(ctx context.Context, req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
 	UploadSound(ctx context.Context, req *dto.UploadFileRequest) (*dto.UploadFileResponse, error)
+	GetImage(ctx context.Context, req *dto.GetFileRequest) (*dto.GetFileResponse, error)
+	GetSound(ctx context.Context, req *dto.GetFileRequest) (*dto.GetFileResponse, error)
 }
 type SearchController interface {
 	Search(ctx context.Context, req *dto.SearchRequest) ([]*dto.SoundResponse, error)
